@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="meanMapApp">
+  <head>
+    <title>Place searches</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script> -->    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+    <script src="/js/ng-map.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script> 
+    <script type="text/javascript" src="js/addCtrl.js"></script>
+  
+  </head>
+  <body ng-controller="addCtrl">  
+
+    <nav>
+      <div class="nav-wrapper container">
+        <a href="#" class="left hide-on-med-and-down">Places</a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="#">Readme</a></li>
+          <li><a href='#'>Log in</a></li>
+        </ul>
+      </div>
+    </nav>  
+
+    <div class="row">      
+      <div class="col s6">
+        <h4>Agregar heladeria</h4>
+        <form name="addForm" novalidate>        
+          <div class="row">
+            <label for="nomHeladeria">Nombre</label>               
+            <input placeholder="Nombre" type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre" required>           
+          </div>
+
+          <div class="row">
+            <p>
+              <input type="checkbox" id="artesanal" ng-model="formData.artesanal" />
+              <label for="artesanal">Helado Artesanal</label>
+            </p>
+          </div>
+
+          <div class="row">
+            <label for="gustos">Gustos</label>
+            <input placeholder="(gusto1,gusto2,...gustoN)" type="text" id="gustos" class="validate" ng-model="formData.gustos" required>            
+          </div>
+          
+          <div class="row">
+            <p>
+              <input type="checkbox" id="delivery" ng-model="formData.delivery"/>
+              <label for="delivery">Delivery</label>
+            </p>
+          </div>
+
+          <div class="row">            
+            <input placeholder="Precio por kilo" type="number" min="0" max="400" id="precio" class="validate" ng-model="formData.precio" required>
+              <label for="precio">Precio por kilo</label>
+          </div>
+
+          <button class="btn waves-effect waves-light" type="submit" ng-click="createHeladeria()" ng-disabled="addForm.$invalid">Filtrar
+            <i class="material-icons right">send</i>
+          </button>
+
+        </form>          
+      
+    </div>   
+  </body>
+</html>
