@@ -1,4 +1,5 @@
 var addCtrl = angular.module('addCtrl', []);
+
 addCtrl.controller('addCtrl', function($scope, $http){
 // Initializes Variables
     // ----------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 // Declares the initial angular module "meanMapApp". Module grabs other controllers and services.
-var app = angular.module('meanMapApp', [ 'addCtrl' , 'ngRoute' , require('angular-route') ]);
+//var app = angular.module('meanMapApp', [ 'addCtrl' , 'ngRoute' , require('angular-route') ]);
 
-var slider = document.getElementById('precio');
+var app = angular.module('meanMapApp', [ 'addCtrl' , 'ngRoute' ]);
+
+/*var slider = document.getElementById('precio');
   noUiSlider.create(slider, {
    start: [80, 150],
    connect: true,
@@ -13,4 +15,4 @@ var slider = document.getElementById('precio');
    format: wNumb({
      decimals: 0
    })
-  });
+  });*/
