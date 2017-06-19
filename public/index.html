@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="showMapApp">
+<html ng-app="indexCtrl">
   <head>
     <title>Place searches</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -9,21 +9,24 @@
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>    
+    <link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
+    <link type="text/css" rel="stylesheet" href="css/estilos.css"/>    
     
     <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script> -->
      
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript" src="js/nouislider.min.js"></script>
-    <script type="text/javascript" src="js/wNumb.js"></script>     
+    <script type="text/javascript" src="js/wNumb.js"></script>   
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>  
     <script src="/js/ng-map.min.js"></script>
-    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/indexCtrl.js"></script>
     <script type="text/javascript" src="js/extras.js"></script>
 
     <script>
-      var map;
+      /*var map;
       var infowindow;
 
       function initMap() {
@@ -62,14 +65,14 @@
           infowindow.setContent(place.name);
           infowindow.open(map, this);
         });
-      }
+      }*/
     </script>    
   </head>
   <body>  
 
     <nav>
       <div class="nav-wrapper container">
-        <a href="#" class="left hide-on-med-and-down">Places</a>
+        <a href="/" class="left hide-on-med-and-down">Heladerias</a>
         <ul class="right hide-on-med-and-down">
           <li><a href="#">Readme</a></li>
           <li><a href='#'>Log in</a></li>
@@ -79,8 +82,12 @@
 
     <div class="row">
       <div class="col s7">
-        <div id="map" style="height: 400px"></div>
-         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places&callback=initMap" async defer></script>
+        <div id="map" ng-controller="mapCtrl">
+          <ng-map zoom-to-include-markers="true" class="mapng" id="mapa">
+            <!-- <marker ng-repeat="pin in mapCtrl.markers" position="{{pin.position.lat}},{{pin.position.lng}}" title="{{pin.title}}"></marker> -->
+          </ng-map>
+        </div>
+          
       </div>
 
       <div class="col s5">
