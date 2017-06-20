@@ -1,5 +1,6 @@
-var addCtrl = angular.module('addCtrl', []);
-addCtrl.controller('addCtrl', function($scope, $http){
+var adminCtrl = angular.module('adminCtrl', []);
+
+adminCtrl.controller('addCtrl', ['$scope', '$http', function($scope, $http) {
 // Initializes Variables
     // ----------------------------------------------------------------------------
     $scope.formData = {};
@@ -34,4 +35,4 @@ addCtrl.controller('addCtrl', function($scope, $http){
                 console.log('Error: ' + data);
             });
     };
-});
+}]);

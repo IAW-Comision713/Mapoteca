@@ -24,4 +24,4 @@ HeladeriaSchema.pre('save', function(next){
 });
 
 // Exports the UserSchema for use elsewhere. Sets the MongoDB collection to be used as: "scotch-users"
-module.exports = mongoose.model('scotch-user', HeladeriaSchema);
+module.exports = mongoose.model('heladeria', HeladeriaSchema);
