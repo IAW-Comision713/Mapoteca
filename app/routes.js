@@ -7,6 +7,8 @@ module.exports = function(app) {
 
     // GET Routes
     // --------------------------------------------------------
+
+
     // Retrieve records for all heladerias in the db
     app.get('/heladerias', function(req, res){
 
@@ -29,6 +31,10 @@ module.exports = function(app) {
         res.redirect('index.html');
     });
 
+    app.get('/login', function(req,res){
+        res.redirect('login.html');
+    });
+
     // POST Routes
     // --------------------------------------------------------
     // Provides method for saving new users in the db
@@ -46,4 +52,6 @@ module.exports = function(app) {
             res.json(req.body);
         });
     });
+
+    
 };  
