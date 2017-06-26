@@ -39,26 +39,27 @@
 
     <div class="row">
       <div class="col s8">
-        <!-- <div id="map" ng-controller="mapCtrl">
-          <ng-map zoom-to-include-markers="true" class="mapng" id="mapa">
-            <marker ng-repeat="pin in mapCtrl.markers" position="{{pin.position.lat}},{{pin.position.lng}}" title="{{pin.title}}"></marker>
+        <div ng-controller="mapCtrl" id="map">
+          <ng-map center="[-38.7167,-62.2833]" map-initialized="mycallback(map)" id="mapa">
+            <!--<marker ng-repeat="pin in mapCtrl.markers" position="{{pin.lat}},{{pin.lng}}" title="{{pin.title}}"></marker> -->
           </ng-map>
         </div>
- -->          
+         
       </div>
 
       <div class="col s4">
       <div class="nav-content">
         <ul class="tabs">
           <li class="tab"><a href="#filtrar">Buscar</a></li>
-          <li class="tab"><a href="#detalles/:heladeriaId">Detalles</a></li>
-          <li class="tab"><a href="#comentarios/:heladeriaId">Comentarios</a></li>
+          <li class="tab"><a href="#detalles\:heladeriaId">Detalles</a></li>
+          <li class="tab"><a href="#comentarios\:heladeriaId">Comentarios</a></li>
           <li class="tab"><a href="#listado">Listado</a></li>
         </ul>
       </div>
 
-      <div class="row">
+      <div id="main" class="row">
         <div ng-view></div>
+        
       </div>
         
       </div>

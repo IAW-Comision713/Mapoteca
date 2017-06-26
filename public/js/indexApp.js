@@ -6,26 +6,23 @@ var heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria d
 var actual = {id: 1, nombre: "Nombre de la heladeria", precio: 120}
 
 
-indexApp.config(['$routeProvider', '$locationProvider', function($routeProvider) {
-    
+indexApp.config( ['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
     $routeProvider
       .when('/filtrar', {
-        templateUrl: '/partials/panelfiltros.html',
-        //controller: 'BookCtrl',
-        //controllerAs: 'book'
-      })
-      .when('/detalles/:heladeriaId', {
-        templateUrl: '/partials/detalles.html',
-        controller: 'HeladeriaDetallesCtrl',
-        controllerAs: 'detalles'
-      })
+        templateUrl: './partials/panelfiltros.html'        
+      })      
       .when('/comentarios/:heladeriaId', {
-        templateUrl: '/partials/comentarios.html',
+        templateUrl: './partials/comentarios.html'
         //controller: 'HeladeriaDetallesCtrl',
         //controllerAs: 'detalles'
       })
+      .when('/detalles/:heladeriaId', {
+        templateUrl: './partials/detalles.html',
+        controller: 'HeladeriaDetallesCtrl',
+        controllerAs: 'detalles'
+      })
       .when('/listado', {
-        templateUrl: '/partials/listado.html',
+        templateUrl: './partials/listado.html',
         controller: 'ListadoHeladeriasCtrl',
         controllerAs: 'listado'
       })
@@ -34,11 +31,11 @@ indexApp.config(['$routeProvider', '$locationProvider', function($routeProvider)
       });
 }]);
 
-indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams', function($routeParams){
+indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams','$scope',function($routeParams,$scope){
 
 	//aca va el pedido a la base de datos sobre el detalle de una heladeria en particular
 	//en routeParams viene el id
-
+  $scope.message='vista detalles';
 	this.heladeria = {id: 1, nombre: "Nombre de la heladeria", precio: 120};
 
 }]);
@@ -57,6 +54,13 @@ indexApp.controller('ListadoHeladeriasCtrl', function(){
 		actual.id = id;
 	};
 });
+
+indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
+
+  $scope.mycallback=function(map){
+    $scope.mymap=map;
+    $scope.$apply();
+  } 
 
 /*indexCtrl.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
 
@@ -109,7 +113,7 @@ indexApp.controller('ListadoHeladeriasCtrl', function(){
     };
 
     initMap();
-
-}]);*/
+*/
+}]);
 
 })();
