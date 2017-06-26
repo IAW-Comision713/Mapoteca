@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="indexCtrl">
+<html ng-app="indexApp">
   <head>
     <title>Place searches</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="js/nouislider.js"></script>   
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>  
     <script src="/js/ng-map.min.js"></script>
-    <script type="text/javascript" src="js/indexCtrl.js"></script>
+    <script type="text/javascript" src="js/indexApp.js"></script>
     <script type="text/javascript" src="js/extras.js"></script>  
   </head>
   <body>  
@@ -47,91 +47,20 @@
  -->          
       </div>
 
-      <div class="col s4" ng-controller="PanelCtrl as panel">
+      <div class="col s4">
       <div class="nav-content">
         <ul class="tabs">
-          <li class="tab"><a href ng-click="panel.selectTab(1)">Buscar</a></li>
-          <li class="tab"><a href ng-click="panel.selectTab(2)">Detalles</a></li>
-          <li class="tab"><a href ng-click="panel.selectTab(3)">Comentarios</a></li>
-          <li class="tab"><a href ng-click="panel.selectTab(4)">Listado</a></li>
+          <li class="tab"><a href="#filtrar">Buscar</a></li>
+          <li class="tab"><a href="#detalles/:heladeriaId">Detalles</a></li>
+          <li class="tab"><a href="#comentarios/:heladeriaId">Comentarios</a></li>
+          <li class="tab"><a href="#listado">Listado</a></li>
         </ul>
       </div>
 
-
-
-      <div ng-show="panel.isSelected(1)">
-        <h5>Rellená uno o más campos y encontrá la heladería para vos</h5>
-        <form name="filterForm" novalidate>        
-          <div class="row">
-            <div class="input-field">          
-              <input type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre">
-              <label for="nomHeladeria">Nombre (o parte del nombre)</label>
-            </div>
-          </div>
-
-          <div class="row">
-          <h6>Elegí el tipo de helado</h6>
-                <input class="with-gap" name="tipohelado" type="radio" id="artesanal" ng-model="formData.tipohelado" value="artesanal"/>
-                <label for="artesanal">Artesanal</label>
-                <input class="with-gap" name="tipohelado" type="radio" id="franquicia" ng-model="formData.tipohelado" value="franquicia"/>
-                <label for="franquicia">De franquicia</label>
-                <input class="with-gap" name="tipohelado" type="radio" id="ambos" ng-model="formData.tipohelado" value="ambos" checked/>
-                <label for="ambos">Ambos</label>
-          </div>
-
-          <div class="row">
-            <p>
-              <input type="checkbox" id="delivery" ng-model="formData.delivery"/>
-              <label for="delivery">Sólo heladerías con delivery</label>
-            </p>
-          </div>
-          <div class="row"> 
-              <p>           
-              <h6>Precio por kilo</h6>
-              <div class="slider" id="rangoprecio" ng-model="formData.precio"/></div> 
-              </p>             
-          </div>
-
-          <div class="row">
-          <div class="switch">
-          Buscar a no más de
-          <div class="input-field inline">
-            <input placeholder="5000" value="5000" id="distancia" type="number" ng-model="formData.distancia" min="0" max="10000">
-            <label class="active" for="distancia">distancia</label>
-          </div>
-          mts de mi ubicación
-
-            </div>
-          </div>
-
-        </form>          
+      <div class="row">
+        <div ng-view></div>
       </div>
-  
-
-
-
-    <div ng-show="panel.isSelected(2)">
-      En este div van los detalles de la heladeria <br>
-      <div ng-controller="HeladeriaDetallesCtrl as detalles">
-        {{detalles.heladeria.nombre}} <br>
-        {{detalles.heladeria.precio | currency}} <br>
-        <div ng-show="detalles.heladeria.artesanal">Icono es artesanal<br></div>
-        <div ng-show="detalles.heladeria.delivery">Icono tiene delivery<br></div>
-      </div> 
-      
-    </div>
-
-    <div ng-show="panel.isSelected(3)">
-        Acá irían los comentarios de esa heladería <br>
-      </div>
-
-    <div class="collection" ng-show="panel.isSelected(4)" ng-controller="ListadoHeladeriasCtrl as listado">
-      En este div van todas las heladerias
-      <a href class="collection-item" ng-class="{active: heladeria.id === listado.actual.id}" ng-click="listado.select(heladeria.id)" ng-repeat="heladeria in listado.heladerias  | orderBy:'nombre'">
-        <h5>{{heladeria.nombre}}</h5>
-        <div>Aca va alguna funcion para hacer clic en la heladeria</div>
-      </a>
-    </div>     
+        
       </div>
   </body>
 </html>

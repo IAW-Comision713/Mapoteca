@@ -1,18 +1,49 @@
 (function() {
 
-var indexCtrl = angular.module('indexCtrl', ['ngMap', 'ngRoute']);
+var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute']);
 
+var heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria dos"}];
 var actual = {id: 1, nombre: "Nombre de la heladeria", precio: 120}
 
-indexCtrl.controller('HeladeriaDetallesCtrl', function(){
+
+indexApp.config(['$routeProvider', '$locationProvider', function($routeProvider) {
+    
+    $routeProvider
+      .when('/filtrar', {
+        templateUrl: '/partials/panelfiltros.html',
+        //controller: 'BookCtrl',
+        //controllerAs: 'book'
+      })
+      .when('/detalles/:heladeriaId', {
+        templateUrl: '/partials/detalles.html',
+        controller: 'HeladeriaDetallesCtrl',
+        controllerAs: 'detalles'
+      })
+      .when('/comentarios/:heladeriaId', {
+        templateUrl: '/partials/comentarios.html',
+        //controller: 'HeladeriaDetallesCtrl',
+        //controllerAs: 'detalles'
+      })
+      .when('/listado', {
+        templateUrl: '/partials/listado.html',
+        controller: 'ListadoHeladeriasCtrl',
+        controllerAs: 'listado'
+      })
+      .otherwise({
+        redirectTo: '/'
+      });
+}]);
+
+indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams', function($routeParams){
 
 	//aca va el pedido a la base de datos sobre el detalle de una heladeria en particular
+	//en routeParams viene el id
 
 	this.heladeria = {id: 1, nombre: "Nombre de la heladeria", precio: 120};
 
-});
+}]);
 
-indexCtrl.controller('ListadoHeladeriasCtrl', function(){
+indexApp.controller('ListadoHeladeriasCtrl', function(){
 
 	//aca va el pedido a la base de datos de todas las heladerias
 
@@ -25,21 +56,6 @@ indexCtrl.controller('ListadoHeladeriasCtrl', function(){
 
 		actual.id = id;
 	};
-});
-
-indexCtrl.controller('PanelCtrl', function(){
-
-	this.tab = 1;
-
-	this.selectTab = function(tabid) {
-
-		this.tab = tabid;
-	};
-
-	this.isSelected = function(tabid) {
-
-		return this.tab === tabid;
-	}
 });
 
 /*indexCtrl.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {

@@ -2,6 +2,8 @@ $( document ).ready(function() {
 
 var slider = document.getElementById('rangoprecio');
 
+
+if(slider)
 noUiSlider.create(slider, {
    start: [80, 150],
    connect: true,
@@ -18,3 +20,8 @@ noUiSlider.create(slider, {
    $('.slider').slider();
 
 });
+
+function crearslider() {
+
+
+}
