@@ -44,17 +44,11 @@ indexCtrl.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functi
           position: place.geometry.location
         });
 
-        //markers.push(marker);
-
         google.maps.event.addListener(marker, 'click', function() {
           infowindow.setContent(place.name);
           infowindow.open(map, this);
         });
     };
-
-    /*NgMap.getMap().then(function(mapa) {
-      vm.map = mapa;
-    });*/
 
     initMap();
 
