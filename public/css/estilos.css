@@ -6,3 +6,7 @@
 
 	height: 90vh;
 }
+
+#rangoprecio[style^="height: 440px"] {
+  height: 3px !important;
+}

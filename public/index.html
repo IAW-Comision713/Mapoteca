@@ -9,8 +9,9 @@
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
-    <link type="text/css" rel="stylesheet" href="css/estilos.css"/>    
+    <link type="text/css" rel="stylesheet" href="css/nouislider.css"/>  
+    <link type="text/css" rel="stylesheet" href="css/estilos.css"/> 
+     
     
     <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script> -->
      
@@ -18,55 +19,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script type="text/javascript" src="js/nouislider.min.js"></script>
-    <script type="text/javascript" src="js/wNumb.js"></script>   
+    <script type="text/javascript" src="js/nouislider.js"></script>   
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>  
     <script src="/js/ng-map.min.js"></script>
     <script type="text/javascript" src="js/indexCtrl.js"></script>
-    <script type="text/javascript" src="js/extras.js"></script>
-
-    <script>
-      /*var map;
-      var infowindow;
-
-      function initMap() {
-        var pyrmont = {lat: -38.7167, lng: -62.2833};
-
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
-        });
-
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.textSearch({
-          location: pyrmont,
-          radius: 500,
-          query: 'heladeria'
-        }, callback);
-      }
-
-      function callback(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
-        }
-      }
-
-      function createMarker(place) {
-        var placeLoc = place.geometry.location;
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-        });
-      }*/
-    </script>    
+    <script type="text/javascript" src="js/extras.js"></script>  
   </head>
   <body>  
 
@@ -81,64 +38,100 @@
     </nav>  
 
     <div class="row">
-      <div class="col s7">
-        <div id="map" ng-controller="mapCtrl">
+      <div class="col s8">
+        <!-- <div id="map" ng-controller="mapCtrl">
           <ng-map zoom-to-include-markers="true" class="mapng" id="mapa">
-            <!-- <marker ng-repeat="pin in mapCtrl.markers" position="{{pin.position.lat}},{{pin.position.lng}}" title="{{pin.title}}"></marker> -->
+            <marker ng-repeat="pin in mapCtrl.markers" position="{{pin.position.lat}},{{pin.position.lng}}" title="{{pin.title}}"></marker>
           </ng-map>
         </div>
-          
+ -->          
       </div>
 
-      <div class="col s5">
-        <h4>Personalizar busqueda</h4>
+      <div class="col s4" ng-controller="PanelCtrl as panel">
+      <div class="nav-content">
+        <ul class="tabs">
+          <li class="tab"><a href ng-click="panel.selectTab(1)">Buscar</a></li>
+          <li class="tab"><a href ng-click="panel.selectTab(2)">Detalles</a></li>
+          <li class="tab"><a href ng-click="panel.selectTab(3)">Comentarios</a></li>
+          <li class="tab"><a href ng-click="panel.selectTab(4)">Listado</a></li>
+        </ul>
+      </div>
+
+
+
+      <div ng-show="panel.isSelected(1)">
+        <h5>Rellená uno o más campos y encontrá la heladería para vos</h5>
         <form name="filterForm" novalidate>        
           <div class="row">
-            <div class="input-field col s4">          
-              <input placeholder="Nombre" type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre">
-              <label for="nomHeladeria">Nombre</label>
+            <div class="input-field">          
+              <input type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre">
+              <label for="nomHeladeria">Nombre (o parte del nombre)</label>
             </div>
           </div>
 
           <div class="row">
-            <p>
-              <input type="checkbox" id="artesanal" ng-model="formData.artesanal"/>
-              <label for="artesanal">Helado Artesanal</label>
-            </p>
-          </div>
-
-          <div class="row" id="gustos">
-            
+          <h6>Elegí el tipo de helado</h6>
+                <input class="with-gap" name="tipohelado" type="radio" id="artesanal" ng-model="formData.tipohelado" value="artesanal"/>
+                <label for="artesanal">Artesanal</label>
+                <input class="with-gap" name="tipohelado" type="radio" id="franquicia" ng-model="formData.tipohelado" value="franquicia"/>
+                <label for="franquicia">De franquicia</label>
+                <input class="with-gap" name="tipohelado" type="radio" id="ambos" ng-model="formData.tipohelado" value="ambos" checked/>
+                <label for="ambos">Ambos</label>
           </div>
 
           <div class="row">
             <p>
               <input type="checkbox" id="delivery" ng-model="formData.delivery"/>
-              <label for="delivery">Delivery</label>
+              <label for="delivery">Sólo heladerías con delivery</label>
             </p>
+          </div>
+          <div class="row"> 
+              <p>           
+              <h6>Precio por kilo</h6>
+              <div class="slider" id="rangoprecio" ng-model="formData.precio"/></div> 
+              </p>             
           </div>
 
           <div class="row">
-            <p>
-              <input type="checkbox" id="abiertos" ng-model="formData.abiertos"/>
-              <label for="abiertos">Abiertos ahora</label>
-            </p>
+          <div class="switch">
+          Buscar a no más de
+          <div class="input-field inline">
+            <input placeholder="5000" value="5000" id="distancia" type="number" ng-model="formData.distancia" min="0" max="10000">
+            <label class="active" for="distancia">distancia</label>
           </div>
+          mts de mi ubicación
 
-          <div class="row">            
-            <p class="range-field col s5">
-              <label for="precio">Precio por kilo</label>
-              <input type="range" id="precio" min="0" max="400" ng-model="formData.precio"/>              
-            </p>
+            </div>
           </div>
-
-          <button class="btn waves-effect waves-light" type="submit" name="action" ng-disabled="showForm.$invalid">Filtrar
-            <i class="material-icons right">send</i>
-          </button>
 
         </form>          
+      </div>
+  
+
+
+
+    <div ng-show="panel.isSelected(2)">
+      En este div van los detalles de la heladeria <br>
+      <div ng-controller="HeladeriaDetallesCtrl as detalles">
+        {{detalles.heladeria.nombre}} <br>
+        {{detalles.heladeria.precio | currency}} <br>
+        <div ng-show="detalles.heladeria.artesanal">Icono es artesanal<br></div>
+        <div ng-show="detalles.heladeria.delivery">Icono tiene delivery<br></div>
+      </div> 
       
-    </div>      
-    
+    </div>
+
+    <div ng-show="panel.isSelected(3)">
+        Acá irían los comentarios de esa heladería <br>
+      </div>
+
+    <div class="collection" ng-show="panel.isSelected(4)" ng-controller="ListadoHeladeriasCtrl as listado">
+      En este div van todas las heladerias
+      <a href class="collection-item" ng-class="{active: heladeria.id === listado.actual.id}" ng-click="listado.select(heladeria.id)" ng-repeat="heladeria in listado.heladerias  | orderBy:'nombre'">
+        <h5>{{heladeria.nombre}}</h5>
+        <div>Aca va alguna funcion para hacer clic en la heladeria</div>
+      </a>
+    </div>     
+      </div>
   </body>
 </html>

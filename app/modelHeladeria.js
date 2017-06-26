@@ -4,11 +4,14 @@ var Schema      = mongoose.Schema;
 
 // Creates a Heladeria Schema. This will be the basis of how heladeria data is stored in the db
 var HeladeriaSchema = new Schema({
-    name: {type: String, required: true},
+    nombre: {type: String, required: true},
+    direccion: {type: String, requierd: true},
+    location: {type: [Number], required: true},
+    telefono: {type: String, required: true},
     artesanal: {type: Boolean, required: true},
     delivery: {type: Boolean, required: true},
     precio: {type: Number, required: true},
-    gustos: {type: [String], required: true}, 
+    gustos: {type: [String], required: false}, 
     created_at: {type: Date, default: Date.now},
     updated_at: {type: Date, default: Date.now}
 });

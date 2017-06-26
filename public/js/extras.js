@@ -1,18 +1,20 @@
 $( document ).ready(function() {
 
-var slider = document.getElementById('precio');
+var slider = document.getElementById('rangoprecio');
 
 noUiSlider.create(slider, {
    start: [80, 150],
    connect: true,
-   step: 1,
+   step: 10,
    range: {
      'min': 0,
-     'max': 400
+     'max': 300
    },
    format: wNumb({
      decimals: 0
    })
   });
+
+   $('.slider').slider();
 
 });
