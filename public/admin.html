@@ -34,11 +34,11 @@
       </div>
     </nav>  
 
-    <div id="panellogin" ng-hide="getAutenticado()">
+    <!-- <div id="panellogin" ng-hide="getAutenticado()">
 
       <ng-include src="'partials/login.html'"></ng-include>
 
-    </div>
+    </div> -->
 
     <div id="panellogueado" ng-show="getAutenticado()" >
 
@@ -47,15 +47,10 @@
 
           <ng-map zoom="13" center="-38.70, -62.27" id="map">
 
-          <marker position="{{ heladeriasGoogle[0].geometry.location.lat() }}, {{ heladeriasGoogle[0].geometry.location.lng() }}"></marker>
-
-            <marker ng-repeat="hg in heladeriasGoogle" position="{{ hg.geometry.location.lat() }}, {{ hg.geometry.location.lng() }}"></marker>
+            <marker ng-repeat="hg in heladeriasGoogle" position="{{ hg.geometry.location.lat() }}, {{ hg.geometry.location.lng() }}" on-click="cargarInfoGoogle({{$index}})"></marker>
                                  
           </ng-map>
            
-           <h4 ng-repeat="gmarcador in heladeriasGoogle">position={{ gmarcador.geometry.location.lat() }}, {{ gmarcador.geometry.location.lng() }}</h4>
-           {{adminCtrl.heladeriasGoogle[0].geometry.location.lat()}}
-           {{heladeriasGoogle[0].geometry.location.lng()}}
         </div>
 
         <!-- <marker ng-repeat="heladeria in listado" position="{{ heladeria.location.lat }}, {{ heladeria.location.lng }}" icon="/img/iconhelado.png" on-click="pinClicked(this)" on-click="cargarMarcador(m)"></marker> -->

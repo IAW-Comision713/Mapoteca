@@ -5,8 +5,6 @@ var adminApp = angular.module('adminApp', ['ngRoute', 'ngMap']);
 var token;
 var autenticado = true;
 
-var heladeriasGoogle = [];
-
 var direccion = "";
 var location = [];
 
@@ -86,12 +84,12 @@ adminApp.controller('loginCtrl', ['$scope', '$http', '$location', function($scop
 
 
 
-adminApp.controller('adminCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
+adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $scope, NgMap) {
 // Initializes Variables
     // ----------------------------------------------------------------------------
     $scope.formData = {};
 
-    $scope.formData.direccion = direccion;
+    $scope.location = {};
 
     
     // Functions
@@ -103,12 +101,12 @@ adminApp.controller('adminCtrl', ['$http', '$scope', '$location', 'NgMap', funct
         var heladeriaData = {
             nombre: $scope.formData.nombre,
             direccion: $scope.formData.direccion,
-            location: location,
+            location: [$scope.location.lat, $scope.location.lng],
             telefono: $scope.formData.telefono,
             artesanal: $scope.formData.artesanal,
             delivery: $scope.formData.delivery,
             precio: $scope.formData.precio,
-            gustos: $scope.formData.gustos.split(",") //separa los string en un arreglo de strings
+            gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : ""//separa los string en un arreglo de strings
         };
 
         // Saves data to the db
@@ -135,7 +133,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', '$location', 'NgMap', funct
         return autenticado;
     }
 
-    var vm;
+    var vm = this;
 
     //crear marcadores para las heladerias guardadas
 
@@ -145,11 +143,9 @@ adminApp.controller('adminCtrl', ['$http', '$scope', '$location', 'NgMap', funct
     function getHeladeriasGoogle(){
             
             //Bahia Blanca
-
             var pyrmont = {lat: -38.7167, lng: -62.2833};
 
             NgMap.getMap().then(function(map) {
-
 
                 var service = new google.maps.places.PlacesService(map);
                     service.textSearch({
@@ -166,17 +162,36 @@ adminApp.controller('adminCtrl', ['$http', '$scope', '$location', 'NgMap', funct
 
                         $scope.heladeriasGoogle = results;
 
-                        console.log($scope.heladeriasGoogle);
+                        $scope.$apply();
 
-                        console.log($scope.heladeriasGoogle[0].geometry.location.lat());
                     }
-                }
+                };
+
+                
 
                 vm = map;
             });
     }
-
+    
     getHeladeriasGoogle();
+
+    $scope.cargarInfoGoogle = function(e, id) {
+
+        console.log(id);
+        console.log($scope.heladeriasGoogle[id]);
+        $scope.formData.nombre = $scope.heladeriasGoogle[id].name;
+        $scope.formData.direccion = $scope.heladeriasGoogle[id].formatted_address;
+        $scope.location.lat = $scope.heladeriasGoogle[id].geometry.location.lat();
+        $scope.location.lng = $scope.heladeriasGoogle[id].geometry.location.lng();
+
+        centrarMapa(e);
+    }
+
+    function centrarMapa(e) {
+
+        vm.setCenter(e.latLng);
+        vm.setZoom(16);
+    }
 
 }]);
 

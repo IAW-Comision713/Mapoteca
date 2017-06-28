@@ -2,21 +2,21 @@
     <h5>Editar heladerias</h5>
     <form name="addForm" novalidate>        
       <div class="row">
-        <div class="input-field">
+        <div>
         <label for="nomHeladeria">Nombre</label>               
         <input type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre" required>
         </div>           
       </div>
 
       <div class="row">
-        <div class="input-field">
+        <div>
         <label for="direccion">Dirección</label>               
         <input type="text" id="direccion" class="validate" ng-model="formData.direccion" required>
         </div>           
       </div>
 
       <div class="row">
-        <div class="input-field">
+        <div>
         <label for="telefono">Teléfono</label>               
         <input type="number" id="telefono" class="validate" ng-model="formData.telefono">
         </div>           
@@ -43,9 +43,10 @@
         </p>
       </div>
 
-      <div class="row">            
+      <div class="row"> 
+        <label for="precio">Precio por kilo</label>           
         <input type="number" min="0" max="400" id="precio" class="validate" ng-model="formData.precio" required>
-          <label for="precio">Precio por kilo</label>
+          
       </div>
 
       <button class="btn waves-effect waves-light" type="submit" ng-click="createHeladeria()" ng-disabled="addForm.$invalid">Filtrar
