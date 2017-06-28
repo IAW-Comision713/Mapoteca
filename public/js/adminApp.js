@@ -15,7 +15,7 @@ adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
     $routeProvider
       .when('/admin', {
         templateUrl: 'partials/panelabm.html'        
-      })      
+      })     
       .when('/admin/comentarios', {
         templateUrl: 'partials/comentarios.html'
         //controller: 'HeladeriaDetallesCtrl',
@@ -36,7 +36,7 @@ adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
       });
 }]);
 
-adminApp.controller('addCtrl', ['$scope', '$http', function($scope, $http) {
+adminApp.controller('adminCtrl', ['$scope', '$http', function($scope, $http) {
 // Initializes Variables
     // ----------------------------------------------------------------------------
     $scope.formData = {};
@@ -46,6 +46,12 @@ adminApp.controller('addCtrl', ['$scope', '$http', function($scope, $http) {
     
     // Functions
     // ----------------------------------------------------------------------------
+    $scope.logout = function(){
+        localStorage.setItem("token","");
+        window.location="/";
+    };
+
+
     // Creates a new heladeria based on the form fields
     $scope.createHeladeria = function() {
 
@@ -81,8 +87,9 @@ adminApp.controller('addCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     $scope.getAutenticado = function() {
-
-        return autenticado;
+        if(localStorage.getItem("token")!= "")
+            return true;
+        else return false;
     }
 }]);
 

@@ -23,14 +23,14 @@
     <script type="text/javascript" src="js/adminApp.js"></script>
   
   </head>
-  <body ng-controller="addCtrl">  
+  <body ng-controller="adminCtrl">  
 
     <nav>
       <div class="nav-wrapper container">
         <a href="#" class="left hide-on-med-and-down">Places</a>
         <ul class="right hide-on-med-and-down">
           <li><a href="#">Readme</a></li>
-          <li><a href='#'>Log in</a></li>
+          <li><a href='#' ng-click="logout()">Logout</a></li>
         </ul>
       </div>
     </nav>  
