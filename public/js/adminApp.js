@@ -5,6 +5,8 @@ var adminApp = angular.module('adminApp', ['ngRoute', 'ngMap']);
 var token;
 var autenticado = true;
 
+var heladeriasGoogle = [];
+
 var direccion = "";
 var location = [];
 
@@ -84,7 +86,7 @@ adminApp.controller('loginCtrl', ['$scope', '$http', '$location', function($scop
 
 
 
-adminApp.controller('addCtrl', ['$scope', '$http', function($scope, $http) {
+adminApp.controller('adminCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
 // Initializes Variables
     // ----------------------------------------------------------------------------
     $scope.formData = {};
@@ -132,6 +134,50 @@ adminApp.controller('addCtrl', ['$scope', '$http', function($scope, $http) {
 
         return autenticado;
     }
+
+    var vm;
+
+    //crear marcadores para las heladerias guardadas
+
+    //crear marcadores para las heladerias de google
+    //$scope.heladeriasGoogle = [];
+
+    function getHeladeriasGoogle(){
+            
+            //Bahia Blanca
+
+            var pyrmont = {lat: -38.7167, lng: -62.2833};
+
+            NgMap.getMap().then(function(map) {
+
+
+                var service = new google.maps.places.PlacesService(map);
+                    service.textSearch({
+                      location: pyrmont,
+                      radius: 5000,
+                      query: 'heladeria'
+                    }, callback);
+
+                function callback(results, status) {
+
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+                        console.log(results);
+
+                        $scope.heladeriasGoogle = results;
+
+                        console.log($scope.heladeriasGoogle);
+
+                        console.log($scope.heladeriasGoogle[0].geometry.location.lat());
+                    }
+                }
+
+                vm = map;
+            });
+    }
+
+    getHeladeriasGoogle();
+
 }]);
 
 adminApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
@@ -143,49 +189,65 @@ adminApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
 
     //$scope.fbhref=$location.absUrl();
 
-    initMap = function() {
+    //crear marcadores para las heladerias guardadas
+    this.listado = {};
+
+    //crear marcadores para las heladerias de google
+    heladeriasGoogle = [{position:{lat: -38.7167, lng: -62.2833}}];
+
+    /*getHeladeriasGoogle = function() {
+        
+        //Bahia Blanca
 
         var pyrmont = {lat: -38.7167, lng: -62.2833};
 
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
-        });
+        NgMap.getMap().then(function(map) {
 
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.textSearch({
-          location: pyrmont,
-          radius: 500,
-          query: 'heladeria'
-        }, callback);
-    };
 
-    callback = function(results, status) {
+            var service = new google.maps.places.PlacesService(map);
+                service.textSearch({
+                  location: pyrmont,
+                  radius: 5000,
+                  query: 'heladeria'
+                }, callback);
+            });
 
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
+            function callback(results, status) {
+
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                  for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                  }
+                }
+            };
+
+            function createMarker(place) {
+
+                var placeLoc = place.geometry.location;
+                var marker = new google.maps.Marker({
+                  map: map,
+                  position: place.geometry.location
+                });
+
+                var marcador = {}
+
+                heladeriasGoogle.push(marker);
+
+                console.log(marker.position.lat());
+
+                google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.setContent(place.name);
+                  infowindow.open(map, this);
+                  location = [marker.position.lat(), marker.position.lng()];
+                });
+            };
+
+            //vm = map;
+            
+            console.log(heladeriasGoogle);
         }
-    };
 
-    createMarker = function(place) {
-
-        var placeLoc = place.geometry.location;
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-          location = [marker.position.lat, marker.position.long];
-        });
-    };
-
-    initMap();
+    getHeladeriasGoogle();*/
 
 }]);
 

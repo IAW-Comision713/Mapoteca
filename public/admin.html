@@ -18,12 +18,11 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
-    <script src="/js/ng-map.min.js"></script>
-    <script type="text/javascript" src="js/app.js"></script> 
+    <script type="text/javascript" src="js/ng-map.min.js"></script>
     <script type="text/javascript" src="js/adminApp.js"></script>
   
   </head>
-  <body ng-controller="addCtrl">  
+  <body ng-controller="adminCtrl">  
 
     <nav>
       <div class="nav-wrapper container">
@@ -41,14 +40,27 @@
 
     </div>
 
-    <div id="panellogueado" ng-show="getAutenticado()">
+    <div id="panellogueado" ng-show="getAutenticado()" >
 
       <div class="row">
         <div class="mapng col s8">
-          <div id="map" ng-controller="mapCtrl">
-          </div>
+
+          <ng-map zoom="13" center="-38.70, -62.27" id="map">
+
+          <marker position="{{ heladeriasGoogle[0].geometry.location.lat() }}, {{ heladeriasGoogle[0].geometry.location.lng() }}"></marker>
+
+            <marker ng-repeat="hg in heladeriasGoogle" position="{{ hg.geometry.location.lat() }}, {{ hg.geometry.location.lng() }}"></marker>
+                                 
+          </ng-map>
            
+           <h4 ng-repeat="gmarcador in heladeriasGoogle">position={{ gmarcador.geometry.location.lat() }}, {{ gmarcador.geometry.location.lng() }}</h4>
+           {{adminCtrl.heladeriasGoogle[0].geometry.location.lat()}}
+           {{heladeriasGoogle[0].geometry.location.lng()}}
         </div>
+
+        <!-- <marker ng-repeat="heladeria in listado" position="{{ heladeria.location.lat }}, {{ heladeria.location.lng }}" icon="/img/iconhelado.png" on-click="pinClicked(this)" on-click="cargarMarcador(m)"></marker> -->
+
+
 
         <div class="col s4">
         <div class="nav-content">
@@ -65,7 +77,8 @@
         <div class="row paneles">
           <div class="panelscrollable" ng-view></div>
         </div>
-    </div>      
-  
+      </div>      
+    </div>
+    </div>
   </body>
 </html>
