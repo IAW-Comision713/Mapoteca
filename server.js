@@ -65,21 +65,21 @@ var apiRoutes = express.Router();
 // ---------------------------------------------------------
 // authentication (no middleware necessary since this isnt authenticated)
 // ---------------------------------------------------------
-apiRoutes.get('/login', function(req, res) {
-  res.sendFile(path.join(__dirname + '/public/login.html'));
+apiRoutes.get('/admin', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/admin.html'));
 });
 // http://localhost:8080/login
 apiRoutes.post('/authenticate', function(req, res) {
   console.log(req.body);
   // find the user
   User.findOne({
-    name: req.usuario
+    name: req.body.usuario
   }, function(err, user) {
     if (err) throw err;
     if (!user) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
-      bcrypt.compare(req.password, user.password, function(err, match) {
+      bcrypt.compare(req.body.password, user.password, function(err, match) {
         if (!match) {
           res.json({ success: false, message: 'Authentication failed. Wrong password.' });
         } else {
@@ -108,7 +108,7 @@ apiRoutes.post('/authenticate', function(req, res) {
 // ---------------------------------------------------------
 adminRoutes.use(function(req, res, next) {
 	// check header or url parameters or post parameters for token
-  var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
   // decode token
   if (token) {
   // verifies secret and checks exp
@@ -133,9 +133,9 @@ adminRoutes.use(function(req, res, next) {
 // ---------------------------------------------------------
 // authenticated routes
 // ---------------------------------------------------------
-adminRoutes.get('/edit', function(req, res) {
-  res.sendFile(path.join(__dirname + '/public/addHeladeria.html'));
-});
+/*adminRoutes.get('/panel', function(req, res) {
+  res.sendFile(path.join(__dirname + 'partials/paneladmin.html'));
+});*/
 adminRoutes.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
 });
@@ -147,7 +147,7 @@ adminRoutes.get('/users', function(req, res) {
 adminRoutes.get('/check', function(req, res) {
   res.json(req.decoded);
 });
-app.use('/api', adminRoutes);
+app.use('/auth', adminRoutes);
 app.use('/', apiRoutes);
 require('./app/routes.js')(app);
 // Listen

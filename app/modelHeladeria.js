@@ -7,7 +7,7 @@ var HeladeriaSchema = new Schema({
     nombre: {type: String, required: true},
     direccion: {type: String, requierd: true},
     location: {type: [Number], required: true},
-    telefono: {type: String, required: true},
+    telefono: {type: String, required: false},
     artesanal: {type: Boolean, required: true},
     delivery: {type: Boolean, required: true},
     precio: {type: Number, required: true},

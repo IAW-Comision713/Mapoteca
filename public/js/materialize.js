@@ -1465,7 +1465,7 @@ if (jQuery) {
 
 
       // If the location.hash matches one of the links, use that as the active tab.
-      $active = $($links.filter('[href="'+location.hash+'"]'));
+      $active = $($links.filter('[href="'+location+'"]'));
 
       // If no match is found, use the first link or any with class 'active' as the initial active tab.
       if ($active.length === 0) {
@@ -1554,6 +1554,7 @@ if (jQuery) {
 
         // Act as regular link if target attribute is specified.
         if (!!$(this).attr("target")) {
+
           return;
         }
 
@@ -1609,7 +1610,7 @@ if (jQuery) {
         animateIndicator(prev_index);
 
         // Prevent the anchor's default click action
-        e.preventDefault();
+        //e.preventDefault();
       });
     });
 

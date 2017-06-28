@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-app="adminApp">
+  <head>
+    <title>Place searches</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <base href="/">
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/estilos.css"/> 
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.js"></script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>     
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+    <script src="/js/ng-map.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script> 
+    <script type="text/javascript" src="js/adminApp.js"></script>
+  
+  </head>
+  <body ng-controller="addCtrl">  
+
+    <nav>
+      <div class="nav-wrapper container">
+        <a href="#" class="left hide-on-med-and-down">Places</a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="#">Readme</a></li>
+          <li><a href='#'>Log in</a></li>
+        </ul>
+      </div>
+    </nav>  
+
+    <div id="panellogin" ng-hide="getAutenticado()">
+
+      <ng-include src="'partials/login.html'"></ng-include>
+
+    </div>
+
+    <div id="panellogueado" ng-show="getAutenticado()">
+
+      <div class="row">
+        <div class="mapng col s8">
+          <div id="map" ng-controller="mapCtrl">
+          </div>
+           
+        </div>
+
+        <div class="col s4">
+        <div class="nav-content">
+          <ul class="tabs">
+            <li class="tab"><a href="/admin">Editar</a></li>
+            <li class="tab"><a href="/admin/listado">Listado</a></li>
+            <li class="tab"><a href="/admin/detalles">Detalles</a></li>
+            <li class="tab"><a href="/admin/comentarios">Comentarios</a></li>
+            
+          </ul>
+        </div>
+
+
+        <div class="row paneles">
+          <div class="panelscrollable" ng-view></div>
+        </div>
+    </div>      
+  
+  </body>
+</html>

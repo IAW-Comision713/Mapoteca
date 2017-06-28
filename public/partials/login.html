@@ -1,0 +1,23 @@
+<div class="row" ng-controller="loginCtrl">      
+  <div class="col s6">
+    <h4>Log in</h4>
+    <form name="loginForm" novalidate>        
+      <div class="row">
+        <label for="usuario">Nombre de usuario</label>               
+        <input type="text" id="usuario" class="validate" ng-model="formData.usuario" required>           
+      </div>
+
+      <div class="row">
+        <p>
+          <input type="password" id="contrasenia" ng-model="formData.password" />
+          <label for="artesanal">Contraseña</label>
+        </p>
+      </div>
+
+      <button class="btn waves-effect waves-light" type="submit" ng-click="login()" ng-disabled="loginForm.$invalid">Login
+        <i class="material-icons right">send</i>
+      </button>
+
+    </form>          
+  
+</div> 

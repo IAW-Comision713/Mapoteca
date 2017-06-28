@@ -4,6 +4,7 @@
     <title>Place searches</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <base href="/">
 
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -11,19 +12,19 @@
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="css/nouislider.css"/>  
     <link type="text/css" rel="stylesheet" href="css/estilos.css"/> 
-     
+    
+
     
     <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script> -->
      
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/materialize.js"></script>
     <script type="text/javascript" src="js/nouislider.js"></script>   
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>  
     <script src="/js/ng-map.min.js"></script>
-    <script type="text/javascript" src="js/indexApp.js"></script>
-    <script type="text/javascript" src="js/extras.js"></script>  
+    <script type="text/javascript" src="js/indexApp.js"></script>  
   </head>
   <body>  
 
@@ -50,14 +51,14 @@
       <div class="col s4">
       <div class="nav-content">
         <ul class="tabs">
-          <li class="tab"><a href="#filtrar">Buscar</a></li>
-          <li class="tab"><a href="#detalles\:heladeriaId">Detalles</a></li>
-          <li class="tab"><a href="#comentarios\:heladeriaId">Comentarios</a></li>
-          <li class="tab"><a href="#listado">Listado</a></li>
+          <li class="tab"><a href="/">Buscar</a></li>
+          <li class="tab"><a href="/detalles">Detalles</a></li>
+          <li class="tab"><a href="/comentarios">Comentarios</a></li>
+          <li class="tab"><a href="/listado">Listado</a></li>
         </ul>
       </div>
 
-      <div id="main" class="row">
+      <div class="row">
         <div ng-view></div>
         
       </div>

@@ -6,23 +6,26 @@ var heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria d
 var actual = {id: 1, nombre: "Nombre de la heladeria", precio: 120}
 
 
-indexApp.config( ['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
+indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+    
+    $locationProvider.html5Mode(true);
+
     $routeProvider
-      .when('/filtrar', {
-        templateUrl: './partials/panelfiltros.html'        
+      .when('/', {
+        templateUrl: 'partials/panelfiltros.html'        
       })      
-      .when('/comentarios/:heladeriaId', {
-        templateUrl: './partials/comentarios.html'
+      .when('/comentarios', {
+        templateUrl: 'partials/comentarios.html'
         //controller: 'HeladeriaDetallesCtrl',
         //controllerAs: 'detalles'
       })
-      .when('/detalles/:heladeriaId', {
-        templateUrl: './partials/detalles.html',
+      .when('/detalles', {
+        templateUrl: 'partials/detalles.html',
         controller: 'HeladeriaDetallesCtrl',
         controllerAs: 'detalles'
       })
       .when('/listado', {
-        templateUrl: './partials/listado.html',
+        templateUrl: 'partials/listado.html',
         controller: 'ListadoHeladeriasCtrl',
         controllerAs: 'listado'
       })

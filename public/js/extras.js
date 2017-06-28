@@ -20,8 +20,3 @@ noUiSlider.create(slider, {
    $('.slider').slider();
 
 });
-
-function crearslider() {
-
-
-}

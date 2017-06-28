@@ -1,0 +1,57 @@
+  <div class="row">
+    <h5>Editar heladerias</h5>
+    <form name="addForm" novalidate>        
+      <div class="row">
+        <div class="input-field">
+        <label for="nomHeladeria">Nombre</label>               
+        <input type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre" required>
+        </div>           
+      </div>
+
+      <div class="row">
+        <div class="input-field">
+        <label for="direccion">Dirección</label>               
+        <input type="text" id="direccion" class="validate" ng-model="formData.direccion" required>
+        </div>           
+      </div>
+
+      <div class="row">
+        <div class="input-field">
+        <label for="telefono">Teléfono</label>               
+        <input type="number" id="telefono" class="validate" ng-model="formData.telefono">
+        </div>           
+      </div>
+
+      <div class="row">
+        <p>
+          <input type="checkbox" id="artesanal" ng-model="formData.artesanal" />
+          <label for="artesanal">Helado Artesanal</label>
+        </p>
+      </div>
+
+      <div class="row">
+        <div class="input-field">
+        <label for="gustos">Gustos (separados por coma)</label>
+        <textarea id="gustos" class="materialize-textarea" ng-model="formData.gustos"></textarea>
+        </div>          
+      </div>
+      
+      <div class="row">
+        <p>
+          <input type="checkbox" id="delivery" ng-model="formData.delivery"/>
+          <label for="delivery">Tiene delivery</label>
+        </p>
+      </div>
+
+      <div class="row">            
+        <input type="number" min="0" max="400" id="precio" class="validate" ng-model="formData.precio" required>
+          <label for="precio">Precio por kilo</label>
+      </div>
+
+      <button class="btn waves-effect waves-light" type="submit" ng-click="createHeladeria()" ng-disabled="addForm.$invalid">Filtrar
+        <i class="material-icons right">send</i>
+      </button>
+
+    </form>          
+  
+</div> 
