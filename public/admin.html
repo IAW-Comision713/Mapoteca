@@ -35,37 +35,31 @@
       </div>
     </nav>  
 
-    <div id="panellogin" ng-hide="getAutenticado()">
-
-      <ng-include src="'partials/login.html'"></ng-include>
-
-    </div>
-
     <div id="panellogueado" ng-show="getAutenticado()">
 
       <div class="row">
         <div class="mapng col s8">
           <div id="map" ng-controller="mapCtrl">
-          </div>
-           
+          </div>           
         </div>
 
         <div class="col s4">
-        <div class="nav-content">
-          <ul class="tabs">
-            <li class="tab"><a href="/admin">Editar</a></li>
-            <li class="tab"><a href="/admin/listado">Listado</a></li>
-            <li class="tab"><a href="/admin/detalles">Detalles</a></li>
-            <li class="tab"><a href="/admin/comentarios">Comentarios</a></li>
-            
-          </ul>
-        </div>
+          <div class="nav-content">
+            <ul class="tabs">
+              <li class="tab"><a href="/admin">Editar</a></li>
+              <li class="tab"><a href="/admin/listado">Listado</a></li>
+              <li class="tab"><a href="/admin/detalles">Detalles</a></li>
+              <li class="tab"><a href="/admin/comentarios">Comentarios</a></li>
+              
+            </ul>
+          </div>
 
-
-        <div class="row paneles">
-          <div class="panelscrollable" ng-view></div>
-        </div>
-    </div>      
+          <div class="row paneles">
+            <div class="panelscrollable" ng-view></div>
+          </div>
+        </div> 
+      </div> 
+    </div>    
   
   </body>
 </html>

@@ -19,6 +19,7 @@ const saltRounds = 10;
 // var config = require('./config');
 // get our config file
 var User = require('./app/modelUser'); // get our mongoose model
+var Heladeria = require('./app/modelHeladeria');
 // mongoose.connect(config.database); // connect to database
 app.set('superSecret', 'elsecreto'); // secret variable
 // Express Configuration
@@ -65,8 +66,8 @@ var apiRoutes = express.Router();
 // ---------------------------------------------------------
 // authentication (no middleware necessary since this isnt authenticated)
 // ---------------------------------------------------------
-apiRoutes.get('/admin', function(req, res) {
-  res.sendFile(path.join(__dirname + '/public/admin.html'));
+apiRoutes.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 // http://localhost:8080/login
 apiRoutes.post('/authenticate', function(req, res) {
@@ -133,9 +134,12 @@ adminRoutes.use(function(req, res, next) {
 // ---------------------------------------------------------
 // authenticated routes
 // ---------------------------------------------------------
-/*adminRoutes.get('/panel', function(req, res) {
+/* adminRoutes.get('/panel', function(req, res) {
   res.sendFile(path.join(__dirname + 'partials/paneladmin.html'));
 });*/
+adminRoutes.get('/admin', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/admin.html'));
+});
 adminRoutes.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
 });
@@ -147,9 +151,29 @@ adminRoutes.get('/users', function(req, res) {
 adminRoutes.get('/check', function(req, res) {
   res.json(req.decoded);
 });
+adminRoutes.get('/heladerias', function(req, res) {
+  // Uses Mongoose schema to run the search (empty conditions)
+  var query = Heladeria.find({});
+  query.exec(function(err, users) {
+    if (err)
+      res.send(err);
+      // If no errors are found, it responds with a JSON of all users
+    res.json(users);
+  });
+});
+adminRoutes.post('/heladerias', function(req, res) {
+  // Creates a new User based on the Mongoose schema and the post bo.dy
+  var newheladeria = new Heladeria(req.body);
+  // New User is saved in the db.
+  newheladeria.save(function(err) {
+    if (err)
+      res.send(err);
+      // If no errors are found, it responds with a JSON of the new user
+    res.json(req.body);
+  });
+});
 app.use('/auth', adminRoutes);
 app.use('/', apiRoutes);
-require('./app/routes.js')(app);
 // Listen
 // -------------------------------------------------------
 app.listen(port);

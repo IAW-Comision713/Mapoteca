@@ -29,9 +29,13 @@ indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
         controller: 'ListadoHeladeriasCtrl',
         controllerAs: 'listado'
       })
+      .when('/login', {
+        templateUrl: 'partials/login.html',
+        controller: 'loginCtrl'
+      })
       .otherwise({
         redirectTo: '/'
-      });
+      })
 }]);
 
 indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams','$scope',function($routeParams,$scope){
@@ -41,6 +45,38 @@ indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams','$scope',function($
   $scope.message='vista detalles';
 	this.heladeria = {id: 1, nombre: "Nombre de la heladeria", precio: 120};
 
+}]);
+
+indexApp.controller('loginCtrl', ['$scope', '$http', '$location',function($scope, $http, $location, $window) {
+// Initializes Variables
+    // ----------------------------------------------------------------------------
+    $scope.formData = {};
+   
+    // Functions
+    // ----------------------------------------------------------------------------
+    // Creates a new heladeria based on the form fields
+    $scope.login = function() {
+
+        
+        var userData = {
+            usuario: $scope.formData.usuario,
+            password: $scope.formData.password,
+        };
+        $http.post("/authenticate", userData).then(function successCallback(response) {
+        // this callback will be called asynchronously
+        // when the response is available
+            token = response.data.token;
+            autenticado = response.data.success;
+            localStorage.setItem("token", response.data.token);
+            console.log(autenticado);
+            console.log(localStorage.getItem("token"));
+            window.location = 'http://localhost:3000/auth/admin?token='+token;            
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.log('Error: ' + response.data);
+        });
+    };
 }]);
 
 indexApp.controller('ListadoHeladeriasCtrl', function(){
