@@ -1,10 +1,23 @@
 <div>
-  En este div van los detalles de la heladeria <br>
-  <div>
-    {{detalles.heladeria.nombre}} <br>
-    {{detalles.heladeria.precio | currency}} <br>
-    <div ng-show="detalles.heladeria.artesanal">Icono es artesanal<br></div>
-    <div ng-show="detalles.heladeria.delivery">Icono tiene delivery<br></div>
-  </div> 
+  <div ng-show="agregar">
+  	Seleccioná una heladería para mostrar los detalles!
+  </div>
+
+  <div ng-hide="agregar">
+  	<ul class="collection with-header">
+  	        <li class="collection-header"><h4>{{detalles.nombre}}</h4></li>
+  	        <li class="collection-item">Id: {{detalles._id}}</li>
+  	        <li class="collection-item"><i class="material-icons">location_on</i>Dirección: {{detalles.direccion}}
+  	        	<br>Latitud: {{detalles.location[0]}}
+  	        	<br>Longitud: {{detalles.location[1]}}
+  	        </li>
+  	        
+  	        <li class="collection-item" ng-hide="{{detalles.telefono === ''}}"><i class="material-icons">phone</i>Teléfono: {{detalles.telefono}}</li>
+  	        <li class="collection-item" ng-show="detalles.delivery"><i class="material-icons">motorcycle</i>Tiene delivery</li>
+  	        <li class="collection-item" ng-show="detalles.artesanal"><i class="material-icons">favorite</i>Es artesanal</li>
+  	        <li class="collection-item" ng-hide="{{detalles.gustos === ''}}"><i class="material-icons">favorite</i>Algunos gustos que podés disfrutar en esta heladería: <span ng-repeat="gusto in detalles.gustos">{{gusto}}, </span></li>
+  	      </ul>
+
+  </div>
   
 </div>

@@ -1,6 +1,5 @@
 <div class="collection">
-  En este div van todas las heladerias
-  <a href class="collection-item" ng-class="{active: heladeria.id == listado.heladerias[0].id}" ng-click="listado.select(heladeria)" ng-repeat="heladeria in listado.heladerias  | orderBy:'nombre'">
+  <a href class="collection-item" ng-class="{active: detalles._id === heladeria._id}" ng-click="selectHeladeria(heladeria._id)" ng-repeat="heladeria in heladerias  | orderBy:'nombre'">
     <h5>{{heladeria.nombre}}</h5>
     <div>Aca va alguna funcion para hacer clic en la heladeria</div>
   </a>

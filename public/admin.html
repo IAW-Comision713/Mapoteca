@@ -39,16 +39,20 @@
       <div class="row">
         <div class="mapng col s8">
 
-          <ng-map zoom="13" center="-38.70, -62.27" id="map">
+          <ng-map zoom="13" center="-38.70, -62.27" id="map" on-click="moverPin()">
+
+            <marker ng-repeat="heladeria in heladerias" position="{{ heladeria.location[0] }}, {{ heladeria.location[1] }}" icon="img/pinhelado.png" on-click="cargarInfoHeladeria(heladeria._id)"></marker>
 
             <marker ng-repeat="hg in heladeriasGoogle" position="{{ hg.geometry.location.lat() }}, {{ hg.geometry.location.lng() }}" on-click="cargarInfoGoogle({{$index}})"></marker>
-                                 
+
+            <marker position="{{pin.lat}}, {{pin.lng}}"></marker>
+                  
           </ng-map>
            
 
         </div>
 
-        <!-- <marker ng-repeat="heladeria in listado" position="{{ heladeria.location.lat }}, {{ heladeria.location.lng }}" icon="/img/iconhelado.png" on-click="pinClicked(this)" on-click="cargarMarcador(m)"></marker> -->
+        <!--  -->
 
 
 

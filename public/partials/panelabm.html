@@ -11,14 +11,14 @@
       <div class="row">
         <div>
         <label for="direccion">Dirección</label>               
-        <input type="text" id="direccion" class="validate" ng-model="formData.direccion" required>
+        <input type="text" id="direccion" class="validate" ng-model="formData.direccion" ng-keypress="obtenerCoordenadas()" required>
         </div>           
       </div>
 
       <div class="row">
         <div>
         <label for="telefono">Teléfono</label>               
-        <input type="number" id="telefono" class="validate" ng-model="formData.telefono">
+        <input type="text" id="telefono" class="validate" ng-model="formData.telefono">
         </div>           
       </div>
 
@@ -30,7 +30,7 @@
       </div>
 
       <div class="row">
-        <div class="input-field">
+        <div>
         <label for="gustos">Gustos (separados por coma)</label>
         <textarea id="gustos" class="materialize-textarea" ng-model="formData.gustos"></textarea>
         </div>          
@@ -49,9 +49,19 @@
           
       </div>
 
-      <button class="btn waves-effect waves-light" type="submit" ng-click="createHeladeria()" ng-disabled="addForm.$invalid">Filtrar
+      <div ng-show="agregar">
+      <button class="btn waves-effect waves-light" type="submit" ng-click="createHeladeria()" ng-disabled="addForm.$invalid">Agregar
         <i class="material-icons right">send</i>
       </button>
+      </div>
+      <div ng-hide="agregar">
+      <button class="btn waves-effect waves-light" type="submit" ng-click="updateHeladeria()" ng-disabled="addForm.$invalid">Editar
+        <i class="material-icons right">send</i>
+      </button>
+      <button class="btn waves-effect waves-light" type="submit" ng-click="removeHeladeria()" ng-disabled="addForm.$invalid">Eliminar
+        <i class="material-icons right">send</i>
+      </button>
+      </div>
 
     </form>          
   

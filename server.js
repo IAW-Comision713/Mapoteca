@@ -54,10 +54,6 @@ app.get('/setup', function(req, res) {
     });
   });
 });
-// basic route (http://localhost:8080)
-// app.get('/', function(req, res) {
-// 	res.send('Hello! The API is at http://localhost:' + port + '/api');
-// });
 // ---------------------------------------------------------
 // get an instance of the router for api routes
 // ---------------------------------------------------------
@@ -104,6 +100,20 @@ apiRoutes.post('/authenticate', function(req, res) {
     }
   });
 });
+apiRoutes.get('/heladerias', function(req, res) {
+  // Uses Mongoose schema to run the search (empty conditions)
+  Heladeria.find({}, function(err, heladerias) {
+    res.json(heladerias);
+  });
+});
+// Endpoint para obtener una heladería específica
+apiRoutes.get('/heladerias/:id', function(req, res) {
+  Heladeria.findOne({ _id: mongoose.Types.ObjectId(req.params.id) }, function(err, heladeria) {
+    if (err)
+      res.send(err);
+    res.json(heladeria);
+  });
+});
 // ---------------------------------------------------------
 // route middleware to authenticate and check token
 // ---------------------------------------------------------
@@ -134,9 +144,6 @@ adminRoutes.use(function(req, res, next) {
 // ---------------------------------------------------------
 // authenticated routes
 // ---------------------------------------------------------
-/* adminRoutes.get('/panel', function(req, res) {
-  res.sendFile(path.join(__dirname + 'partials/paneladmin.html'));
-});*/
 adminRoutes.get('/admin', function(req, res) {
   res.sendFile(path.join(__dirname + '/public/admin.html'));
 });
@@ -151,10 +158,30 @@ adminRoutes.get('/users', function(req, res) {
 adminRoutes.get('/check', function(req, res) {
   res.json(req.decoded);
 });
-apiRoutes.get('/heladerias', function(req, res) {
-  // Uses Mongoose schema to run the search (empty conditions)
-  Heladeria.find({}, function(err, heladerias) {
-    res.json(heladerias);
+adminRoutes.put('/heladerias/:id', function(req, res) {
+  console.log(req.body);
+  console.log(req.params.id);
+  Heladeria.findById(req.params.id, function (err, data) {
+    data.nombre = req.body.heladeria.nombre;
+    data.direccion = req.body.heladeria.vicinity;
+    data.location = req.body.heladeria.location;
+    data.telefono = req.body.heladeria.telefono;
+    data.artesanal = req.body.heladeria.artesanal;
+    data.delivery = req.body.heladeria.delivery;
+    data.precio = req.body.heladeria.precio;
+    data.gustos = req.body.heladeria.gustos;
+    console.log('edite el objeto');
+    data.save(function(err) {
+      console.log(err);
+      if (err) throw err;
+      res.json({ success: true });
+    });
+  });
+});
+adminRoutes.delete('/heladerias/:id', function(req, res) {
+  Heladeria.findByIdAndRemove(req.params.id, function(err, data) {
+    if (err) throw err;
+    res.json({ success: true });
   });
 });
 adminRoutes.post('/heladerias', function(req, res) {
