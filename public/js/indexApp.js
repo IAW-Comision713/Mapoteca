@@ -191,45 +191,42 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     var out=[];
 
     var num=$scope.heladerias.length; 
-    console.log("precio "+$scope.formData.distancia);   
+    console.log("precio "+$scope.formData.precio);   
     
     if($scope.formData.distancia != undefined){
       
       var distances=[];
     if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                      var pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                      };
-                      
-                      vm.center=pos;
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude                        
+            };
+            
+            vm.center=pos;
             queryBody = {
-            longitude: longitude,
-            latitude: latitude,
-            distance: $scope.formData.distance            
-          };
+              longitude: pos.lng,
+              latitude: pos.lat,
+              distance: parseFloat($scope.formData.distancia)            
+            };
           $http.post('/query', queryBody)
           // Store the filtered results in queryResults
-            .success(function(queryResults){
+            .then(function(queryResults){
               distances=queryResults.data;
               console.log("QueryResults:");
               console.log(queryResults);
 
             // Count the number of records retrieved for the panel-footer
               $scope.queryCount = queryResults.length;
-            })
-            .error(function(queryResults){
-              console.log('Error ' + queryResults);
-            });
+            })           
           
-                    }, function() {
-                      console.log("Geolocation ok")
-                    });
-                  } else {
-                    // Browser doesn't support Geolocation
-                    alert("Error geolocation");
-                  }
+          }, function() {
+            console.log("Geolocation ok")
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          alert("Error geolocation");
+        }
     
       //control de otros filtros a partir de los resultados de distancia
 
