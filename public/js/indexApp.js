@@ -1,9 +1,6 @@
 (function() {
 
 var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute']);
-
-var heladerias;
-
 var actual;
 
 var filtros = []
@@ -23,7 +20,7 @@ indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
         //controller: 'HeladeriaDetallesCtrl',
         //controllerAs: 'detalles'
       })
-      .when('/detalles:id', {
+      .when('/detalles', {
         templateUrl: 'partials/detalles.html',
       })
       .when('/listado', {
@@ -82,15 +79,31 @@ indexApp.controller('loginCtrl', ['$scope', '$http', '$location',function($scope
 indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
 
 	$scope.heladerias;
+	$scope.urlfacebook;
+	$scope.detalles = {};
+	$scope.agregar = false;
 	var actual;
+	
+	var vm = this;
+
+	function obtenerMapa() {
+
+		NgMap.getMap().then(function(map) {
+
+	    vm = map;
+	});
+	}
+
+	obtenerMapa();
 
   function actualizarHeladerias() {
 
         $http.get('/heladerias').then(function successCallback(response) {
                 
                 $scope.heladerias = response.data;
-                actual = heladerias[0];
-                $scope.markers=response.data;            
+                actual = $scope.heladerias[0];
+                $scope.markers=response.data;
+                //$scope.$apply();           
               }, function errorCallback(response) {
                   // called asynchronously if an error occurs
                   // or server returns response with an error status.
@@ -99,19 +112,51 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     }
 
     actualizarHeladerias();
+    actualizarComentarios();
    
     $scope.selectHeladeria = function(_id) {
 
         $http.get('/heladerias/'+_id).then(function(response) {
             
             $scope.detalles = response.data;
-            actual = response.data;        
+            actual = response.data;  
+
+            vm.setCenter(new google.maps.LatLng($scope.detalles.location[0], $scope.detalles.location[1]));
+            vm.setZoom(16);      
         });
 
-        actualizarComentarios(_id); 
+        actualizarComentarios(_id);
+
+        $scope.agregar = false;
     }
 
+    $scope.cargarInfoHeladeria = function(e, id) {
 
+        $scope.selectHeladeria(id);
+
+        centrarMapa(e);
+
+        $scope.showDetail(e, id);
+
+        //$scope.agregar = false;
+    }
+
+    function centrarMapa(e) {
+
+        vm.setCenter(e.latLng);
+        
+        vm.setZoom(16);
+    }
+
+    function actualizarComentarios(id) {
+
+        if(id)
+            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios/" + id;
+        else
+            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port();
+
+        console.log($scope.urlfacebook);
+    }
 
 
   $scope.showDetail = function(e, pin) {
@@ -142,9 +187,6 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     console.log($scope.heladerias[2].nombre.substring(0,$scope.formData.nombre.length))
     console.log($scope.markers);
   };
-  
-
-
 }]);
 
 })();

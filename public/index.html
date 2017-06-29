@@ -26,7 +26,7 @@
     <script src="/js/ng-map.min.js"></script>
     <script type="text/javascript" src="js/indexApp.js"></script>  
   </head>
-  <body>  
+  <body ng-controller="mapCtrl">  
 
     <nav>
       <div class="nav-wrapper container">
@@ -40,9 +40,9 @@
 
     <div class="row">
       <div class="col s8">
-        <div ng-controller="mapCtrl">
+        <div>
           <ng-map zoom="13" center="[-38.7167,-62.2833]" id="map">
-            <marker ng-repeat="pin in markers" id="{{pin.id}}" position="{{pin.location[0]}},{{pin.location[1]}}" title="{{pin.nombre}}" on-click="showDetail(pin)"></marker>
+            <marker ng-repeat="pin in heladerias" id="{{pin.id}}" position="{{pin.location[0]}},{{pin.location[1]}}" title="{{pin.nombre}}" on-click="cargarInfoHeladeria(pin._id)" icon="img/pinhelado.png"></marker>
             <info-window id="h-iw">
               <div ng-non-bindable="">                
                 name: {{pin.nombre}}<br/>
