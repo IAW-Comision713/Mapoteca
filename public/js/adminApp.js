@@ -92,6 +92,10 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
     $scope.location = {};
 
     $scope.agregar = true;
+
+    $scope.pin = {};
+
+    vaciarFormulario();
     // Functions
     // ----------------------------------------------------------------------------
     // Creates a new heladeria based on the form fields
@@ -212,6 +216,63 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
         });
 
         
+    }
+
+    var geocoder = new google.maps.Geocoder;
+
+    $scope.moverPin = function(e) {
+
+        console.log(e);
+
+        $scope.pin.lat = e.latLng.lat();
+        $scope.pin.lng = e.latLng.lng();
+
+        $scope.location.lat = e.latLng.lat();
+        $scope.location.lng = e.latLng.lng();
+
+        vaciarFormulario();
+
+        $scope.agregar = true;
+
+        geocoder.geocode({location: e.latLng}, function(results, status) {
+            
+            if (status === 'OK') {
+                  if (results[0]) {
+                    
+                    centrarMapa(e);
+                    
+                    $scope.formData.direccion = results[0].formatted_address;
+                    $scope.$apply();
+
+                  } else {
+                    Materialize.toast("No fue posible cargar la dirección :(", 4000);
+                  }
+                } else {
+                  Materialize.toast("Error en el geocoder", 4000);
+                }
+
+        });
+    }
+
+    $scope.obtenerCoordenadas = function() {
+
+        geocoder.geocode({address: $scope.formData.direccion}, function(results, status) {
+            
+            if (status == 'OK') {
+                    
+                    console.log(results[0]);
+                    //centrarMapa(results[0].geometry.location);
+                    
+                    $scope.pin.lat = results[0].geometry.location.lat();
+                    $scope.pin.lng = results[0].geometry.location.lng();
+
+                    $scope.location.lat = results[0].geometry.location.lat();
+                    $scope.location.lng = results[0].geometry.location.lng();
+            } else {
+                    
+                    //si no encuentra la direccion no pasa nada
+            }
+        });
     }
 
     $scope.getAutenticado = function() {

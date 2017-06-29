@@ -11,7 +11,7 @@
       <div class="row">
         <div>
         <label for="direccion">Dirección</label>               
-        <input type="text" id="direccion" class="validate" ng-model="formData.direccion" required>
+        <input type="text" id="direccion" class="validate" ng-model="formData.direccion" ng-keypress="obtenerCoordenadas()" required>
         </div>           
       </div>
 
