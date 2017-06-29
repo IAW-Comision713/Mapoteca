@@ -18,13 +18,14 @@
     <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script> -->
      
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
     <script type="text/javascript" src="js/materialize.js"></script>
     <script type="text/javascript" src="js/nouislider.js"></script>   
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>  
     <script src="/js/ng-map.min.js"></script>
-    <script type="text/javascript" src="js/indexApp.js"></script>  
+    <script type="text/javascript" src="js/indexApp.js"></script>
+    <script src="/lib/angularjs-geolocation/src/geolocation.js"></script>  
   </head>
   <body ng-controller="mapCtrl">  
 
@@ -42,7 +43,7 @@
       <div class="col s8">
         <div>
           <ng-map zoom="13" center="[-38.7167,-62.2833]" id="map">
-            <marker position={{actual}} animation="Animation.BOUNCE" centered="true" id="actual"></marker>
+            <marker position=current animation="Animation.BOUNCE" centered="true" id="actual"></marker>
             <marker ng-repeat="pin in heladerias" id="{{pin.id}}" position="{{pin.location[0]}},{{pin.location[1]}}" title="{{pin.nombre}}" on-click="cargarInfoHeladeria(pin._id)" icon="img/pinhelado.png"></marker>
             <info-window id="h-iw">
               <div ng-non-bindable="">                

@@ -1,6 +1,6 @@
 (function() {
 
-var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute', 'geolocation', 'gservice']);
+var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute', 'geolocation']);
 
 var actual;
 
@@ -95,12 +95,12 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
 	                $scope.heladerias = response.data;
 	                actual = $scope.heladerias[0];
 
-	                geolocation.getLocation().then(function(data){
+	                /*geolocation.getLocation().then(function(data){
 	            	
 	            		coords = {lat:data.coords.latitude, long:data.coords.longitude};
-	          		});
+	          		});*/
 	          
-	          		$scope.actual.position=coords;
+	          		//$scope.actual.position=coords;
 	          		$scope.markers=response.data; 
 	                //$scope.$apply();           
 	        }, function errorCallback(response) {
@@ -180,57 +180,13 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     var num=$scope.heladerias.length; 
     console.log("precio "+$scope.formData.distancia);   
     
-    if($scope.formData.distancia != undefined){
-      
-      var distances=[];
-      geolocation.getLocation().then(function(data){
-      
-      		coords = {lat:data.coords.latitude, long:data.coords.longitude};
-      		$scope.actual.position=coords;
-
-      		var longitude = parseFloat(coords.long).toFixed(3);
-      		var latitude = parseFloat(coords.lat).toFixed(3);
-
-        	queryBody = {
-            	longitude: longitude,
-            	latitude: latitude,
-            	distance: parseFloat($scope.formData.distance)            
-        	};
-
-        	$http.post('/query', queryBody)
-            // Store the filtered results in queryResults
-            	.success(function(queryResults){
-               		distances=queryResults.data;
-                	console.log("QueryResults:");
-                	console.log(queryResults);
-
-                // Count the number of records retrieved for the panel-footer
-                	$scope.queryCount = queryResults.length;
-            	})
-            	.error(function(queryResults){
-                	console.log('Error ' + queryResults);
-            	});
-      	});
-      //control de otros filtros a partir de los resultados de distancia
-
-      for(var i=0; i<distances.length; i++){
-        if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && distances[i].nombre.substring(0,$scope.formData.nombre.length)==$scope.formData.nombre))        
-          if(($scope.formData.delivery==true && distances[i].delivery==true) || $scope.formData.delivery==undefined)
-            if(( $scope.formData.tipohelado=='artesanal' && distances[i].artesanal==true) || ($scope.formData.tipohelado=='artesanal' && distances[i].artesanal==false) || $scope.formData.tipohelado==undefined)
-              if(($scope.formData.precio == undefined) || (distances[i].precio <= $scope.formData.precio))              
-                out.push(distances[i]);
-      }
-    }
-    else{
-      for(var i=0; i<num; i++){
+    for(var i=0; i<num; i++){
       if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && $scope.heladerias[i].nombre.substring(0,$scope.formData.nombre.length)==$scope.formData.nombre))        
         if(($scope.formData.delivery==true && $scope.heladerias[i].delivery==true) || $scope.formData.delivery==undefined)
           if(( $scope.formData.tipohelado=='artesanal' && $scope.heladerias[i].artesanal==true) || ($scope.formData.tipohelado=='artesanal' && $scope.heladerias[i].artesanal==false) || $scope.formData.tipohelado==undefined)
             if(($scope.formData.precio == undefined) || ($scope.heladerias[i].precio <= $scope.formData.precio))              
               out.push($scope.heladerias[i]);              
-      }
-    }    
-
+    }
     $scope.markers=out;
     console.log($scope.markers);
   }
