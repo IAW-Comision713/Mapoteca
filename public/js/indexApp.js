@@ -2,8 +2,11 @@
 
 var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute']);
 
-var heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria dos"}];
-var actual = {id: 1, nombre: "Nombre de la heladeria", precio: 120}
+var heladerias;
+
+var actual;
+
+var filtros = []
 
 
 indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -12,26 +15,27 @@ indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
 
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/panelfiltros.html'        
+        templateUrl: 'partials/panelfiltros.html',
+        controller: 'mapCtrl'
       })      
       .when('/comentarios', {
         templateUrl: 'partials/comentarios.html'
         //controller: 'HeladeriaDetallesCtrl',
         //controllerAs: 'detalles'
       })
-      .when('/detalles', {
+      .when('/detalles:id', {
         templateUrl: 'partials/detalles.html',
-        controller: 'HeladeriaDetallesCtrl',
-        controllerAs: 'detalles'
       })
       .when('/listado', {
         templateUrl: 'partials/listado.html',
-        controller: 'ListadoHeladeriasCtrl',
-        controllerAs: 'listado'
+      })
+      .when('/login', {
+        templateUrl: 'partials/login.html',
+        controller: 'loginCtrl'
       })
       .otherwise({
         redirectTo: '/'
-      });
+      })
 }]);
 
 indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams','$scope',function($routeParams,$scope){
@@ -43,80 +47,104 @@ indexApp.controller('HeladeriaDetallesCtrl', ['$routeParams','$scope',function($
 
 }]);
 
-indexApp.controller('ListadoHeladeriasCtrl', function(){
+indexApp.controller('loginCtrl', ['$scope', '$http', '$location',function($scope, $http, $location, $window) {
+// Initializes Variables
+    // ----------------------------------------------------------------------------
+    $scope.formData = {};
+   
+    // Functions
+    // ----------------------------------------------------------------------------
+    // Creates a new heladeria based on the form fields
+    $scope.login = function() {
 
-	//aca va el pedido a la base de datos de todas las heladerias
-
-	this.actual = actual;
-	this.heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria dos"}];
-
-	this.select = function(id) {
-
-		//aca va el pedido a la base de datos sobre el detalle de una heladeria en particular
-
-		actual.id = id;
-	};
-});
+        
+        var userData = {
+            usuario: $scope.formData.usuario,
+            password: $scope.formData.password,
+        };
+        $http.post("/authenticate", userData).then(function successCallback(response) {
+        // this callback will be called asynchronously
+        // when the response is available
+            token = response.data.token;
+            autenticado = response.data.success;
+            localStorage.setItem("token", response.data.token);
+            console.log(autenticado);
+            console.log(localStorage.getItem("token"));
+            window.location = 'http://localhost:3000/auth/admin?token='+token;            
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.log('Error: ' + response.data);
+        });
+    };
+}]);
 
 indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
 
-  $scope.mycallback=function(map){
-    $scope.mymap=map;
-    $scope.$apply();
-  } 
+	$scope.heladerias;
+	var actual;
 
-/*indexCtrl.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
+  function actualizarHeladerias() {
 
-	var vm = this;
-	var map;
-    var infowindow;
-    var markers = {};
+        $http.get('/heladerias').then(function successCallback(response) {
+                
+                $scope.heladerias = response.data;
+                actual = heladerias[0];
+                $scope.markers=response.data;            
+              }, function errorCallback(response) {
+                  // called asynchronously if an error occurs
+                  // or server returns response with an error status.
+                  alert('Error al cargar heladerias, recargue la pagina');
+              });
+    }
 
-    $scope.fbhref=$location.absUrl();
+    actualizarHeladerias();
+   
+    $scope.selectHeladeria = function(_id) {
 
-    initMap = function() {
-
-    	var pyrmont = {lat: -38.7167, lng: -62.2833};
-
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
+        $http.get('/heladerias/'+_id).then(function(response) {
+            
+            $scope.detalles = response.data;
+            actual = response.data;        
         });
 
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.textSearch({
-          location: pyrmont,
-          radius: 500,
-          query: 'heladeria'
-        }, callback);
-    };
+        actualizarComentarios(_id); 
+    }
 
-    callback = function(results, status) {
 
-    	if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
-        }
-    };
 
-    createMarker = function(place) {
 
-    	var placeLoc = place.geometry.location;
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
+  $scope.showDetail = function(e, pin) {
+    NgMap.getMap().then(function(map) {
+      $scope.pin=pin;      
+      $scope.map.showInfoWindow('h-iw', pin.id);
+      console.log(pin.nombre);
+    });
+  };
 
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-        });
-    };
+  $scope.ctrlChanged = function(){     
+    var out=[];
+    var num = $scope.heladerias.length;
+    console.log($scope.heladerias.length);
 
-    initMap();
-*/
+    for(var i=0; i<num; i++){
+
+      if($scope.heladerias[i].nombre.substring(0,$scope.formData.nombre.length)==$scope.formData.nombre &&
+        $scope.heladerias[i].artesanal == $scope.formData.artesanal &&
+        $scope.heladerias[i].delivery == $scope.formData.delivery)
+        
+        out.push($scope.heladerias[i]);
+    }
+
+    console.log(out);
+
+    $scope.markers = out;
+    console.log($scope.heladerias[2].nombre.substring(0,$scope.formData.nombre.length))
+    console.log($scope.markers);
+  };
+  
+
+
 }]);
 
 })();

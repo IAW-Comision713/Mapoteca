@@ -3,46 +3,44 @@
   <form name="filterForm" novalidate>        
     <div class="row">
       <div class="input-field">          
-        <input type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre">
+        <input type="text" id="nomHeladeria" class="validate" ng-model="formData.nombre" ng-change='ctrlChanged()'>
         <label for="nomHeladeria">Nombre (o parte del nombre)</label>
       </div>
     </div>
 
     <div class="row">
-    <h6>Elegí el tipo de helado</h6>
-          <input class="with-gap" name="tipohelado" type="radio" id="artesanal" ng-model="formData.tipohelado" value="artesanal"/>
-          <label for="artesanal">Artesanal</label>
-          <input class="with-gap" name="tipohelado" type="radio" id="franquicia" ng-model="formData.tipohelado" value="franquicia"/>
-          <label for="franquicia">De franquicia</label>
-          <input class="with-gap" name="tipohelado" type="radio" id="ambos" ng-model="formData.tipohelado" value="ambos"/>
-          <label for="ambos">Ambos</label>
+      <h6>Elegí el tipo de helado</h6>
+        <input class="with-gap" name="tipohelado" type="radio" id="artesanal" ng-model="formData.tipohelado" value="artesanal" ng-change='crtlChanged()'/>
+        <label for="artesanal">Artesanal</label>
+        <input class="with-gap" name="tipohelado" type="radio" id="franquicia" ng-model="formData.tipohelado" value="franquicia" ng-change='crtlChanged()'/>
+        <label for="franquicia">De franquicia</label>
+        <input class="with-gap" name="tipohelado" type="radio" id="ambos" ng-model="formData.tipohelado" value="ambos" ng-change='ctrlChanged()'/>
+        <label for="ambos">Ambos</label>
     </div>
 
     <div class="row">
       <p>
-        <input type="checkbox" id="delivery" ng-model="formData.delivery"/>
+        <input type="checkbox" id="delivery" ng-model="formData.delivery" ng-change='ctrlChanged()'/>
         <label for="delivery">Sólo heladerías con delivery</label>
       </p>
     </div>
     <div class="row"> 
-        <p>           
+      <p>           
         <h6>Precio por kilo</h6>
-        <div class="slider" id="rangoprecio" ng-model="formData.precio"/></div> 
-        </p>             
+        <div class="slider" id="rangoprecio" ng-model="formData.precio" ng-changed='ctrlChanged()'/></div> 
+      </p>             
     </div>
 
     <div class="row">
-    <div class="switch">
-    Buscar a no más de
-    <div class="input-field inline">
-      <input placeholder="5000" value="5000" id="distancia" type="number" ng-model="formData.distancia" min="0" max="10000">
-      <label class="active" for="distancia">distancia</label>
-    </div>
-    mts de mi ubicación
-
+      <div class="switch">
+        Buscar a no más de
+        <div class="input-field inline">
+          <input placeholder="5000" value="5000" id="distancia" type="number" ng-model="formData.distancia" min="0" max="10000" ng-change='ctrlChanged()'>
+          <label class="active" for="distancia">distancia</label>
+        </div>
+        mts de mi ubicación
       </div>
     </div>
-
   </form> 
   <script type="text/javascript" src="js/extras.js"></script>         
 </div>

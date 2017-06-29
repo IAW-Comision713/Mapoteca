@@ -15,7 +15,7 @@ adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
     $routeProvider
       .when('/admin', {
         templateUrl: 'partials/panelabm.html'        
-      })      
+      })     
       .when('/admin/comentarios', {
         templateUrl: 'partials/comentarios.html'
         //controller: 'HeladeriaDetallesCtrl',
@@ -36,55 +36,7 @@ adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
       });
 }]);
 
-adminApp.controller('loginCtrl', ['$scope', '$http', '$location', function($scope, $http, $location, $window) {
-// Initializes Variables
-    // ----------------------------------------------------------------------------
-    $scope.formData = {};
-   
-    // Functions
-    // ----------------------------------------------------------------------------
-    // Creates a new heladeria based on the form fields
-    $scope.login = function() {
-
-        
-        var userData = {
-            usuario: $scope.formData.usuario,
-            password: $scope.formData.password,
-        };
-
-        $http.post("/authenticate", userData).then(function successCallback(response) {
-        // this callback will be called asynchronously
-        // when the response is available
-            token = response.data.token;
-            autenticado = response.data.success;
-
-            localStorage.setItem("token", response.data.token);
-
-            if(localStorage.getItem("token")!==null){
-                  
-                 
-               }
-               else {
-                   
-                   
-                         
-               }
-
-            console.log(autenticado);
-
-            $location.url('/admin');
-        }, function errorCallback(response) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            console.log('Error: ' + response.data);
-        });   
-        
-    };
-}]);
-
-
-
-adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $scope, NgMap) {
+adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', function($http, $scope, NgMap, $location) {
 // Initializes Variables
     // ----------------------------------------------------------------------------
     $scope.formData = {};
@@ -95,9 +47,17 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
     $scope.pin = {};
 
+    $scope.urlfacebook = $location.absUrl();
+
     vaciarFormulario();
     // Functions
     // ----------------------------------------------------------------------------
+    $scope.logout = function(){
+        localStorage.setItem("token","");
+        window.location="/";
+    };
+
+
     // Creates a new heladeria based on the form fields
     $scope.createHeladeria = function() {
 
@@ -106,15 +66,20 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
             nombre: $scope.formData.nombre,
             direccion: $scope.formData.direccion,
             location: [$scope.location.lat, $scope.location.lng],
-            telefono: $scope.formData.telefono,
-            artesanal: $scope.formData.artesanal,
-            delivery: $scope.formData.delivery,
+            telefono: $scope.formData.telefono ? $scope.formData.telefono : false,
+            artesanal: $scope.formData.artesanal ? $scope.formData.artesanal : false,
+            delivery: $scope.formData.delivery ? $scope.formData.delivery : false,
             precio: $scope.formData.precio,
             gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : []//separa los string en un arreglo de strings
         };
 
+            console.log($scope.formData.artesanal);
+            console.log($scope.formData.telefono);
+            console.log($scope.formData.delivery);
+
         // Saves data to the db
-        $http.post('/heladerias', {token:"123", heladeria: heladeriaData})
+        $http.post('/auth/heladerias', {token: localStorage.getItem("token"), heladeria: heladeriaData})
+
             .success(function (data) {
 
                 vaciarFormulario();
@@ -128,6 +93,12 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
                 Materialize.toast("No fue posible agregar la heladería :(", 4000);
             });
+        $http.get('/heladerias').success(function(data){
+            console.log("Success:"+data);
+        })
+        .error(function(data){
+            console.log("Error:"+data);
+        })
     };
 
     $scope.id = 0;
@@ -145,7 +116,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
             gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : []//separa los string en un arreglo de strings
         };
 
-        $http.put('/heladerias/'+$scope.detalles._id, {token:"123", heladeria: heladeriaData})
+        $http.put('/auth/heladerias/'+$scope.detalles._id, {token: localStorage.getItem("token"), heladeria: heladeriaData})
         .success(function (data) {
 
             vaciarFormulario();
@@ -164,7 +135,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
     $scope.removeHeladeria = function() {
 
-        $http.delete('/heladerias/'+$scope.detalles._id, {token: "123"})
+        $http.delete('/auth/heladerias/'+$scope.detalles._id, {token: localStorage.getItem("token")})
         .success(function (data) {
 
             vaciarFormulario();
@@ -215,7 +186,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
             $scope.agregar = false;           
         });
 
-        
+        actualizarComentarios(_id); 
     }
 
     var geocoder = new google.maps.Geocoder;
@@ -231,6 +202,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
         $scope.location.lng = e.latLng.lng();
 
         vaciarFormulario();
+        actualizarComentarios();
 
         $scope.agregar = true;
 
@@ -276,10 +248,13 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
     }
 
     $scope.getAutenticado = function() {
-
-        return autenticado;
+        if(localStorage.getItem("token")!= "")
+            return true;
+        else
+            return false;
     }
 
+    //crear marcadores para las heladerias guardadas
     function actualizarHeladerias() {
 
         $http.get('/heladerias').then(function(response) {
@@ -292,11 +267,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
     var vm = this;
 
-    //crear marcadores para las heladerias guardadas
-
     //crear marcadores para las heladerias de google
-    //$scope.heladeriasGoogle = [];
-
     function getHeladeriasGoogle(){
             
             //Bahia Blanca
@@ -334,8 +305,8 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
     $scope.cargarInfoGoogle = function(e, id) {
 
-        console.log(id);
-        console.log($scope.heladeriasGoogle[id]);
+        //console.log(id);
+        //console.log($scope.heladeriasGoogle[id]);
         $scope.formData.nombre = $scope.heladeriasGoogle[id].name;
         $scope.formData.direccion = $scope.heladeriasGoogle[id].formatted_address;
         $scope.formData.telefono = "";
@@ -351,14 +322,13 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
         centrarMapa(e);
 
         $scope.agregar = true;
+
+        actualizarComentarios();
     }
 
     $scope.cargarInfoHeladeria = function(e, id) {
 
         $scope.selectHeladeria(id);
-
-        console.log(id);
-        console.log(e);
 
         centrarMapa(e);
 
@@ -370,6 +340,14 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
         vm.setCenter(e.latLng);
         
         vm.setZoom(16);
+    }
+
+    function actalizarComentarios(id) {
+
+        if(id)
+            $scope.urlfacebook = $location.absUrl() + "/" + id;
+        else
+            $scope.urlfacebook = $location.absUrl();
     }
 
 }]);
