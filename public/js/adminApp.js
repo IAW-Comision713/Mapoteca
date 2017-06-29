@@ -78,8 +78,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
             console.log($scope.formData.delivery);
 
         // Saves data to the db
-        $http.post('/auth/heladerias', {token: localStorage.getItem("token"), heladeria: heladeriaData})
-
+        $http.post('/auth/heladerias', {token:localStorage.getItem("token"), heladeria: heladeriaData})
             .success(function (data) {
 
                 vaciarFormulario();
