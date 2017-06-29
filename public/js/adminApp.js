@@ -103,6 +103,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     $scope.id = 0;
 
     $scope.updateHeladeria = function() {
+        console.log($scope.formData.gustos);
 
         var heladeriaData = {
             nombre: $scope.formData.nombre,
@@ -178,7 +179,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
             $scope.formData.artesanal = $scope.detalles.artesanal;
             $scope.formData.delivery = $scope.detalles.delivery;
             $scope.formData.precio = $scope.detalles.precio;
-            $scope.formData.gustos= $scope.detalles.gustos;
+            $scope.formData.gustos= $scope.detalles.gustos.toString();
             $scope.location.lat = $scope.detalles.location[0];
             $scope.location.lng = $scope.detalles.location[1];
 
@@ -341,12 +342,13 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
         vm.setZoom(16);
     }
 
-    function actalizarComentarios(id) {
+    function actualizarComentarios(id) {
 
         if(id)
-            $scope.urlfacebook = $location.absUrl() + "/" + id;
+            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios/" + id;
         else
-            $scope.urlfacebook = $location.absUrl();
+            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port();
+        FB.XFBML.parse();
     }
 
 }]);

@@ -4,6 +4,8 @@ var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute', 'geolocation']);
 
 var actual;
 
+var todas;
+
 var filtros = []
 
 
@@ -91,7 +93,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
 	  function actualizarHeladerias() {
 
 	        $http.get('/heladerias').then(function successCallback(response) {
-	                
+	                todas=response.data;
 	                $scope.heladerias = response.data;
 	                actual = $scope.heladerias[0];
                   if (navigator.geolocation) {
@@ -124,7 +126,6 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
 	    }
 
 	    actualizarHeladerias();
-	    actualizarComentarios();
 	   
 	    $scope.selectHeladeria = function(_id) {
 
@@ -168,6 +169,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
 	            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port();
 
 	        console.log($scope.urlfacebook);
+          FB.XFBML.parse();
 	    }
 
   $scope.mycallback=function(map){
@@ -190,7 +192,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
 
     var out=[];
 
-    var num=$scope.heladerias.length; 
+    var num=todas.length; 
     console.log("precio "+$scope.formData.precio);   
     
     if($scope.formData.distancia != undefined){
@@ -240,16 +242,16 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     }
     else{
       for(var i=0; i<num; i++){
-      if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && $scope.heladerias[i].nombre.substring(0,$scope.formData.nombre.length)==$scope.formData.nombre))        
-        if(($scope.formData.delivery==true && $scope.heladerias[i].delivery==true) || $scope.formData.delivery==undefined)
-          if(( $scope.formData.tipohelado=='artesanal' && $scope.heladerias[i].artesanal==true) || ($scope.formData.tipohelado=='artesanal' && $scope.heladerias[i].artesanal==false) || $scope.formData.tipohelado==undefined)
-            if(($scope.formData.precio == undefined) || ($scope.heladerias[i].precio <= $scope.formData.precio))              
-              out.push($scope.heladerias[i]);              
+      if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && todas[i].nombre.substring(0,$scope.formData.nombre.length)==$scope.formData.nombre))        
+        if(($scope.formData.delivery==true && todas.delivery==true) || $scope.formData.delivery==undefined)
+          if(( $scope.formData.tipohelado=='artesanal' && todas[i].artesanal==true) || ($scope.formData.tipohelado=='artesanal' && todas[i].artesanal==false) || $scope.formData.tipohelado==undefined)
+            if(($scope.formData.precio == undefined) || (todas[i].precio <= $scope.formData.precio))              
+              out.push(todas[i]);              
       }
     }    
 
-    $scope.markers=out;
-    console.log($scope.markers);
+    $scope.heladerias=out;
+    console.log($scope.heladerias);
   }
 
 }]);
