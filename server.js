@@ -111,9 +111,20 @@ apiRoutes.get('/heladerias', function(req, res) {
 // Endpoint para obtener una heladería específica
 apiRoutes.get('/heladerias/:id', function(req, res) {
   Heladeria.findOne({ _id: mongoose.Types.ObjectId(req.params.id) }, function(err, heladeria) {
-    if (err)
-      res.send(err);
+    if (err) res.send(err);
     res.json(heladeria);
+  });
+});
+apiRoutes.post('/query', function(req, res) {
+  var lat = req.body.latitude;
+  var long = req.body.longitude;
+  var distance = req.body.distance;
+  var query = Heladeria.find({});
+  query = query.where('location').near({ center: { type: 'Point', coordinates: [long, lat] }, maxDistance: distance * 1609.34, spherical: true });
+  query.exec(function(err, heladerias) {
+    if (err) res.send(err);
+    // If no errors, respond with a JSON of all heladeriass that meet the criteria
+    res.json(heladerias);
   });
 });
 // ---------------------------------------------------------

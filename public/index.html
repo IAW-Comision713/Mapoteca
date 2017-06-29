@@ -42,6 +42,7 @@
       <div class="col s8">
         <div>
           <ng-map zoom="13" center="[-38.7167,-62.2833]" id="map">
+            <marker position={{actual}} animation="Animation.BOUNCE" centered="true" id="actual"></marker>
             <marker ng-repeat="pin in heladerias" id="{{pin.id}}" position="{{pin.location[0]}},{{pin.location[1]}}" title="{{pin.nombre}}" on-click="cargarInfoHeladeria(pin._id)" icon="img/pinhelado.png"></marker>
             <info-window id="h-iw">
               <div ng-non-bindable="">                

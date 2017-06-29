@@ -27,7 +27,7 @@
     <div class="row"> 
       <p>           
         <h6>Precio por kilo</h6>
-        <div class="slider" id="rangoprecio" ng-model="formData.precio" ng-changed='ctrlChanged()'/></div> 
+        <input type="range" id="rangoprecio" min="0" max="2000" ng-model="formData.precio" ng-change="ctrlChanged()" /> 
       </p>             
     </div>
 
