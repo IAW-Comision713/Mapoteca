@@ -91,7 +91,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
     $scope.location = {};
 
-    
+    $scope.agregar = true;
     // Functions
     // ----------------------------------------------------------------------------
     // Creates a new heladeria based on the form fields
@@ -106,32 +106,128 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
             artesanal: $scope.formData.artesanal,
             delivery: $scope.formData.delivery,
             precio: $scope.formData.precio,
-            gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : ""//separa los string en un arreglo de strings
+            gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : []//separa los string en un arreglo de strings
         };
 
         // Saves data to the db
-        $http.post('/heladerias', heladeriaData)
+        $http.post('/heladerias', {token:"123", heladeria: heladeriaData})
             .success(function (data) {
 
-                // Once complete, clear the form (except location)
-                $scope.formData.nombre = "";
-                $scope.formData.direccion = "";
-                $scope.formData.telefono = "";
-                $scope.formData.artesanal = "false";
-                $scope.formData.delivery = "false";
-                $scope.formData.precio = "";
-                $scope.formData.gustos=""
+                vaciarFormulario();
+                actualizarHeladerias();
+
+                Materialize.toast("Heladería agregada correctamente!!", 4000);
 
             })
             .error(function (data) {
                 console.log('Error: ' + data);
+
+                Materialize.toast("No fue posible agregar la heladería :(", 4000);
             });
     };
+
+    $scope.id = 0;
+
+    $scope.updateHeladeria = function() {
+
+        var heladeriaData = {
+            nombre: $scope.formData.nombre,
+            direccion: $scope.formData.direccion,
+            location: $scope.detalles.location,
+            telefono: $scope.formData.telefono,
+            artesanal: $scope.formData.artesanal,
+            delivery: $scope.formData.delivery,
+            precio: $scope.formData.precio,
+            gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : []//separa los string en un arreglo de strings
+        };
+
+        $http.put('/heladerias/'+$scope.detalles._id, {token:"123", heladeria: heladeriaData})
+        .success(function (data) {
+
+            vaciarFormulario();
+            actualizarHeladerias();
+            
+            Materialize.toast("Heladería editada correctamente!!", 4000);
+
+        })
+        .error(function (data) {
+            console.log('Error: ' + data);
+
+            Materialize.toast("No fue posible editar la heladería :(", 4000);
+        });
+ 
+    }
+
+    $scope.removeHeladeria = function() {
+
+        $http.delete('/heladerias/'+$scope.detalles._id, {token: "123"})
+        .success(function (data) {
+
+            vaciarFormulario();
+            actualizarHeladerias();
+
+            Materialize.toast("Heladería eliminada correctamente!!", 4000);
+
+        })
+        .error(function (data) {
+            console.log('Error: ' + data);
+
+            Materialize.toast("No fue posible eliminar la heladería :(", 4000);
+        });
+    }
+
+    function vaciarFormulario() {
+
+        $scope.formData.nombre = "";
+        $scope.formData.direccion = "";
+        $scope.formData.telefono = "";
+        $scope.formData.artesanal = "false";
+        $scope.formData.delivery = "false";
+        $scope.formData.precio = "";
+        $scope.formData.gustos="";
+
+        $scope.detalles = {};
+    }
+
+    $scope.selectHeladeria = function(_id) {
+
+        $http.get('/heladerias/'+_id).then(function(response) {
+            
+            $scope.detalles = response.data;
+
+            vm.setCenter(new google.maps.LatLng($scope.detalles.location[0], $scope.detalles.location[1]));
+            vm.setZoom(16);
+
+            $scope.formData.nombre = $scope.detalles.nombre;
+            $scope.formData.direccion = $scope.detalles.direccion;
+            $scope.formData.telefono = $scope.detalles.telefono;
+            $scope.formData.artesanal = $scope.detalles.artesanal;
+            $scope.formData.delivery = $scope.detalles.delivery;
+            $scope.formData.precio = $scope.detalles.precio;
+            $scope.formData.gustos= $scope.detalles.gustos;
+            $scope.location.lat = $scope.detalles.location[0];
+            $scope.location.lng = $scope.detalles.location[1];
+
+            $scope.agregar = false;           
+        });
+
+        
+    }
 
     $scope.getAutenticado = function() {
 
         return autenticado;
     }
+
+    function actualizarHeladerias() {
+
+        $http.get('/heladerias').then(function(response) {
+            
+            $scope.heladerias = response.data;            
+        });
+    }
+
+    //actualizarHeladerias();
 
     var vm = this;
 
@@ -162,12 +258,12 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
 
                         $scope.heladeriasGoogle = results;
 
+                        actualizarHeladerias();
+
                         $scope.$apply();
 
                     }
                 };
-
-                
 
                 vm = map;
             });
@@ -181,88 +277,39 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
         console.log($scope.heladeriasGoogle[id]);
         $scope.formData.nombre = $scope.heladeriasGoogle[id].name;
         $scope.formData.direccion = $scope.heladeriasGoogle[id].formatted_address;
+        $scope.formData.telefono = "";
+        $scope.formData.artesanal = false;
+        $scope.formData.delivery = false;
+        $scope.formData.precio = "";
+        $scope.formData.gustos= "";
         $scope.location.lat = $scope.heladeriasGoogle[id].geometry.location.lat();
         $scope.location.lng = $scope.heladeriasGoogle[id].geometry.location.lng();
 
+        $scope.detalles = {};
+
         centrarMapa(e);
+
+        $scope.agregar = true;
+    }
+
+    $scope.cargarInfoHeladeria = function(e, id) {
+
+        $scope.selectHeladeria(id);
+
+        console.log(id);
+        console.log(e);
+
+        centrarMapa(e);
+
+        //$scope.agregar = false;
     }
 
     function centrarMapa(e) {
 
         vm.setCenter(e.latLng);
+        
         vm.setZoom(16);
     }
-
-}]);
-
-adminApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
-
-    var vm = this;
-    var map;
-    var infowindow;
-    var markers = {};
-
-    //$scope.fbhref=$location.absUrl();
-
-    //crear marcadores para las heladerias guardadas
-    this.listado = {};
-
-    //crear marcadores para las heladerias de google
-    heladeriasGoogle = [{position:{lat: -38.7167, lng: -62.2833}}];
-
-    /*getHeladeriasGoogle = function() {
-        
-        //Bahia Blanca
-
-        var pyrmont = {lat: -38.7167, lng: -62.2833};
-
-        NgMap.getMap().then(function(map) {
-
-
-            var service = new google.maps.places.PlacesService(map);
-                service.textSearch({
-                  location: pyrmont,
-                  radius: 5000,
-                  query: 'heladeria'
-                }, callback);
-            });
-
-            function callback(results, status) {
-
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                  for (var i = 0; i < results.length; i++) {
-                    createMarker(results[i]);
-                  }
-                }
-            };
-
-            function createMarker(place) {
-
-                var placeLoc = place.geometry.location;
-                var marker = new google.maps.Marker({
-                  map: map,
-                  position: place.geometry.location
-                });
-
-                var marcador = {}
-
-                heladeriasGoogle.push(marker);
-
-                console.log(marker.position.lat());
-
-                google.maps.event.addListener(marker, 'click', function() {
-                  infowindow.setContent(place.name);
-                  infowindow.open(map, this);
-                  location = [marker.position.lat(), marker.position.lng()];
-                });
-            };
-
-            //vm = map;
-            
-            console.log(heladeriasGoogle);
-        }
-
-    getHeladeriasGoogle();*/
 
 }]);
 
