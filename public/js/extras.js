@@ -1,7 +1,5 @@
-$( document ).ready(function() {
-
+$(document).ready(function() {
 var slider = document.getElementById('rangoprecio');
-
 
 if(slider)
 noUiSlider.create(slider, {
