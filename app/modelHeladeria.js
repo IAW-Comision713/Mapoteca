@@ -1,6 +1,6 @@
 // Pulls Mongoose dependency for creating schemas
-var mongoose    = require('mongoose');
-var Schema      = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // Creates a Heladeria Schema. This will be the basis of how heladeria data is stored in the db
 var HeladeriaSchema = new Schema({
@@ -27,4 +27,4 @@ HeladeriaSchema.pre('save', function(next){
 });
 
 // Exports the UserSchema for use elsewhere. Sets the MongoDB collection to be used as: "scotch-users"
-module.exports = mongoose.model('heladeria', HeladeriaSchema);
+module.exports = mongoose.model('Heladeria', HeladeriaSchema);

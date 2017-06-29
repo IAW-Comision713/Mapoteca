@@ -151,14 +151,10 @@ adminRoutes.get('/users', function(req, res) {
 adminRoutes.get('/check', function(req, res) {
   res.json(req.decoded);
 });
-adminRoutes.get('/heladerias', function(req, res) {
+apiRoutes.get('/heladerias', function(req, res) {
   // Uses Mongoose schema to run the search (empty conditions)
-  var query = Heladeria.find({});
-  query.exec(function(err, users) {
-    if (err)
-      res.send(err);
-      // If no errors are found, it responds with a JSON of all users
-    res.json(users);
+  Heladeria.find({}, function(err, heladerias) {
+    res.json(heladerias);
   });
 });
 adminRoutes.post('/heladerias', function(req, res) {
@@ -169,7 +165,7 @@ adminRoutes.post('/heladerias', function(req, res) {
     if (err)
       res.send(err);
       // If no errors are found, it responds with a JSON of the new user
-    res.json(req.body);
+    else res.json(req.body);
   });
 });
 app.use('/auth', adminRoutes);

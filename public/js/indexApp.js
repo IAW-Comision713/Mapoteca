@@ -2,8 +2,11 @@
 
 var indexApp = angular.module('indexApp', ['ngMap', 'ngRoute']);
 
-var heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria dos"}];
-var actual = {id: 1, nombre: "Nombre de la heladeria", precio: 120}
+var heladerias;
+
+var actual;
+
+var filtros = []
 
 
 indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -12,14 +15,15 @@ indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
 
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/panelfiltros.html'        
+        templateUrl: 'partials/panelfiltros.html',
+        controller: 'mapCtrl'
       })      
       .when('/comentarios', {
         templateUrl: 'partials/comentarios.html'
         //controller: 'HeladeriaDetallesCtrl',
         //controllerAs: 'detalles'
       })
-      .when('/detalles', {
+      .when('/detalles:id', {
         templateUrl: 'partials/detalles.html',
         controller: 'HeladeriaDetallesCtrl',
         controllerAs: 'detalles'
@@ -79,80 +83,62 @@ indexApp.controller('loginCtrl', ['$scope', '$http', '$location',function($scope
     };
 }]);
 
-indexApp.controller('ListadoHeladeriasCtrl', function(){
+indexApp.controller('ListadoHeladeriasCtrl', ['$location', function($location){
+  console.log(actual);
+	this.heladerias = heladerias;
 
-	//aca va el pedido a la base de datos de todas las heladerias
-
-	this.actual = actual;
-	this.heladerias = [{id: 1, nombre: "Heladeria uno"}, {id: 2, nombre: "Heladeria dos"}];
-
-	this.select = function(id) {
-
+	this.select = function(h) {
 		//aca va el pedido a la base de datos sobre el detalle de una heladeria en particular
-
-		actual.id = id;
+		actual= h;
+    $location.path('/detalles:'+heladerias[0].id);
+    //$location.path('/detalles:'+h.id);
+    //http.get con ese id
 	};
-});
+}]);
 
 indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
 
+  $http.get('/heladerias').then(function successCallback(response) {
+          heladerias=response.data;
+          actual=heladerias[0];
+          $scope.markers=response.data;            
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            alert('Error al cargar heladerias, recargue la pagina');
+        });
+
   $scope.mycallback=function(map){
-    $scope.mymap=map;
-    $scope.$apply();
-  } 
+    NgMap.getMap().then(function(map) {
+    $scope.map = map;
+    });    
+  }
 
-/*indexCtrl.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap) {
+  $scope.showDetail = function(e, pin) {
+    NgMap.getMap().then(function(map) {
+      $scope.pin=pin;      
+      $scope.map.showInfoWindow('h-iw', pin.id);
+      console.log(pin.nombre);
+    });
+  };
 
-	var vm = this;
-	var map;
-    var infowindow;
-    var markers = {};
+  $scope.ctrlChanged = function(){     
+    var out=[];
+    var num=heladerias.length;
+    console.log(heladerias.length);
+    for(var i=0; i<num; i++){
+      if(heladerias[i].nombre.substring(0,$scope.formData.nombre.length)==$scope.formData.nombre &&
+        heladerias[i].artesanal == $scope.formData.artesanal &&
+        heladerias[i].delivery == $scope.formData.delivery)
+        out.push(heladerias[i]);
+    }
+    $scope.markers=out;
+    console.log(heladerias[2].nombre.substring(0,$scope.formData.nombre.length))
+    console.log($scope.markers);
+  };
+  
 
-    $scope.fbhref=$location.absUrl();
 
-    initMap = function() {
-
-    	var pyrmont = {lat: -38.7167, lng: -62.2833};
-
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
-        });
-
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.textSearch({
-          location: pyrmont,
-          radius: 500,
-          query: 'heladeria'
-        }, callback);
-    };
-
-    callback = function(results, status) {
-
-    	if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
-        }
-    };
-
-    createMarker = function(place) {
-
-    	var placeLoc = place.geometry.location;
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-        });
-    };
-
-    initMap();
-*/
 }]);
 
 })();

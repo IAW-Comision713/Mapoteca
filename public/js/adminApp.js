@@ -60,15 +60,19 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
             nombre: $scope.formData.nombre,
             direccion: $scope.formData.direccion,
             location: [$scope.location.lat, $scope.location.lng],
-            telefono: $scope.formData.telefono,
-            artesanal: $scope.formData.artesanal,
-            delivery: $scope.formData.delivery,
+            telefono: $scope.formData.telefono ? $scope.formData.telefono : false,
+            artesanal: $scope.formData.artesanal ? $scope.formData.artesanal : false,
+            delivery: $scope.formData.delivery ? $scope.formData.delivery : false,
             precio: $scope.formData.precio,
             gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : ""//separa los string en un arreglo de strings
         };
 
+            console.log($scope.formData.artesanal);
+            console.log($scope.formData.telefono);
+            console.log($scope.formData.delivery);
+
         // Saves data to the db
-        $http.post('/heladerias', heladeriaData)
+        $http.post('/auth/heladerias?token='+localStorage.getItem("token"), heladeriaData)
             .success(function (data) {
 
                 // Once complete, clear the form (except location)
@@ -84,6 +88,12 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', function($http, $s
             .error(function (data) {
                 console.log('Error: ' + data);
             });
+        $http.get('/heladerias').success(function(data){
+            console.log("Success:"+data);
+        })
+        .error(function(data){
+            console.log("Error:"+data);
+        })
     };
 
     $scope.getAutenticado = function() {

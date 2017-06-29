@@ -40,9 +40,16 @@
 
     <div class="row">
       <div class="col s8">
-        <div ng-controller="mapCtrl" id="map">
-          <ng-map center="[-38.7167,-62.2833]" map-initialized="mycallback(map)" id="mapa">
-            <!--<marker ng-repeat="pin in mapCtrl.markers" position="{{pin.lat}},{{pin.lng}}" title="{{pin.title}}"></marker> -->
+        <div ng-controller="mapCtrl">
+          <ng-map center="[-38.7167,-62.2833]" map-initialized="mycallback(map)" id="map">
+            <marker ng-repeat="pin in markers" id="{{pin.id}}" position="{{pin.location[0]}},{{pin.location[1]}}" title="{{pin.nombre}}" on-click="showDetail(pin)"></marker>
+            <info-window id="h-iw">
+              <div ng-non-bindable="">                
+                name: {{pin.nombre}}<br/>
+                direccion: {{pin.direccion}}<br/>
+                telefono: {{pin.telefono}}<br/>
+              </div>
+            </info-window>
           </ng-map>
         </div>
          
