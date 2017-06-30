@@ -33,6 +33,9 @@ indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
         templateUrl: 'partials/login.html',
         controller: 'loginCtrl'
       })
+      .when('/readme', {
+        templateUrl: 'partials/readme.html'
+      })
       .otherwise({
         redirectTo: '/'
       })
@@ -215,8 +218,8 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
           // Store the filtered results in queryResults
             .then(function(queryResults){
               distances=queryResults.data;
-              console.log("QueryResults:");
-              console.log(queryResults);
+              console.log("Resultado filtro distancia:");
+              console.log(queryResults.data);
 
             // Count the number of records retrieved for the panel-footer
               $scope.queryCount = queryResults.length;
@@ -251,7 +254,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     }    
 
     $scope.heladerias=out;
-    console.log($scope.heladerias);
+    console.log("resultado del filtro"+$scope.heladerias);
   }
 
 }]);

@@ -17,4 +17,7 @@ noUiSlider.create(slider, {
 
    $('.slider').slider();
 
+  $('.tap-target').tapTarget('open');
+  $('.tap-target').tapTarget('close');
+
 });

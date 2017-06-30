@@ -31,6 +31,9 @@ adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
         //controller: 'ListadoHeladeriasCtrl',
         //controllerAs: 'listado'
       })
+      .when('/readme', {
+        templateUrl: 'partials/readme.html'
+      })
       .otherwise({
         redirectTo: '/admin'
       });
@@ -73,18 +76,13 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
             gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : []//separa los string en un arreglo de strings
         };
 
-            console.log($scope.formData.artesanal);
-            console.log($scope.formData.telefono);
-            console.log($scope.formData.delivery);
-
         // Saves data to the db
-        $http.post('/auth/heladerias', {token:localStorage.getItem("token"), heladeria: heladeriaData})
+        $http.post('/auth/heladerias?token='+localStorage.getItem("token"), heladeriaData)
             .success(function (data) {
-
+                
+                Materialize.toast("Heladería agregada correctamente!!", 4000);
                 vaciarFormulario();
                 actualizarHeladerias();
-
-                Materialize.toast("Heladería agregada correctamente!!", 4000);
 
             })
             .error(function (data) {
@@ -92,12 +90,14 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
                 Materialize.toast("No fue posible agregar la heladería :(", 4000);
             });
-        $http.get('/heladerias').success(function(data){
+        
+
+        /*$http.get('/heladerias').success(function(data){
             console.log("Success:"+data);
         })
         .error(function(data){
             console.log("Error:"+data);
-        })
+        })*/
     };
 
     $scope.id = 0;
@@ -134,12 +134,14 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     }
 
     $scope.removeHeladeria = function() {
+        var data={
+            id:$scope.detalles._id
+        };
 
-        $http.delete('/auth/heladerias/'+$scope.detalles._id, {token: localStorage.getItem("token")})
+        $http.delete('/auth/heladerias/'+$scope.detalles._id+'?token='+localStorage.getItem("token"),data)
         .success(function (data) {
 
-            vaciarFormulario();
-            actualizarHeladerias();
+            
 
             Materialize.toast("Heladería eliminada correctamente!!", 4000);
 
@@ -149,6 +151,9 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
             Materialize.toast("No fue posible eliminar la heladería :(", 4000);
         });
+
+        vaciarFormulario();
+        actualizarHeladerias();
     }
 
     function vaciarFormulario() {
@@ -167,7 +172,9 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     $scope.selectHeladeria = function(_id) {
 
         $http.get('/heladerias/'+_id).then(function(response) {
-            
+
+            console.log(response.data);
+                
             $scope.detalles = response.data;
 
             vm.setCenter(new google.maps.LatLng($scope.detalles.location[0], $scope.detalles.location[1]));
@@ -258,7 +265,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     function actualizarHeladerias() {
 
         $http.get('/heladerias').then(function(response) {
-            
+            $scope.heladerias = [];            
             $scope.heladerias = response.data;            
         });
     }
