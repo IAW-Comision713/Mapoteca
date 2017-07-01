@@ -380,8 +380,8 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
         else
             $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios";
         
-        console.log(id);
-        console.log($scope.urlfacebook);
+        //console.log(id);
+        //console.log($scope.urlfacebook);
 
         $scope.$apply();
 
