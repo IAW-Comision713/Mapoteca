@@ -101,7 +101,7 @@ apiRoutes.post('/authenticate', function(req, res) {
   });
 });
 
-//Endpoint para obtener todas las heladerias
+// Endpoint para obtener todas las heladerias
 apiRoutes.get('/heladerias', function(req, res) {
   // Uses Mongoose schema to run the search (empty conditions)
   Heladeria.find({}, function(err, heladerias) {
@@ -117,7 +117,7 @@ apiRoutes.get('/heladerias/:id', function(req, res) {
   });
 });
 
-//Endpoint para obtener heladerías en base a cierta distancia
+// Endpoint para obtener heladerías en base a cierta distancia
 apiRoutes.post('/query', function(req, res) {
   var lat = req.body.latitude;
   var long = req.body.longitude;
@@ -176,14 +176,11 @@ adminRoutes.get('/check', function(req, res) {
   res.json(req.decoded);
 });
 
-//Editar una heladería
+// Editar una heladería
 adminRoutes.put('/heladerias/:id', function(req, res) {
- 
-  //console.log(req.body);
-  //console.log(req.params.id);
-  
+  // console.log(req.body);
+  // console.log(req.params.id);
   Heladeria.findById(req.params.id, function (err, data) {
-    
     data.nombre = req.body.heladeria.nombre;
     data.direccion = req.body.heladeria.direccion;
     data.location = req.body.heladeria.location;
@@ -192,19 +189,16 @@ adminRoutes.put('/heladerias/:id', function(req, res) {
     data.delivery = req.body.heladeria.delivery;
     data.precio = req.body.heladeria.precio;
     data.gustos = req.body.heladeria.gustos;
-    
-    //console.log('edite el objeto');
-    
+    // console.log('edite el objeto');
     data.save(function(err) {
-      
-      //console.log(err);
+      // console.log(err);
       if (err) throw err;
       res.json({ success: true });
     });
   });
 });
 
-//Eliminar una heladería
+// Eliminar una heladería
 adminRoutes.delete('/heladerias/:id', function(req, res) {
 
   Heladeria.findByIdAndRemove(req.params.id, function(err, data) {
@@ -216,19 +210,15 @@ adminRoutes.delete('/heladerias/:id', function(req, res) {
   });
 });
 
-//Guardar una nueva heladería
+// Guardar una nueva heladería
 adminRoutes.post('/heladerias', function(req, res) {
-  
   var newheladeria = new Heladeria(req.body.heladeria);
-  
   newheladeria.save(function(err) {
     if (err)
       res.send(err);
-     
     else res.json(req.body);
   });
 });
-
 app.use('/auth', adminRoutes);
 app.use('/', apiRoutes);
 // Listen

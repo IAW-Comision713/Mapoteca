@@ -43,6 +43,7 @@ indexApp.controller('loginCtrl', ['$scope', '$http', '$location',function($scope
 indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap, geolocation) {
 
 		$scope.verreadme = false;
+    $scope.formData={};
 
 
 		$scope.togglereadme = function() {
@@ -181,7 +182,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     if($scope.formData.distancia != undefined){
       
       var distances=[];
-    if (navigator.geolocation) {
+        if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             var pos = {
               lat: position.coords.latitude,
@@ -216,7 +217,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
       //control de otros filtros a partir de los resultados de distancia
 
       for(var i=0; i<distances.length; i++){
-        if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && distances[i].nombre.toLowerCase().includes(0,$scope.formData.nombre.toLowerCase())))        
+        if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && distances[i].nombre.toLowerCase().includes($scope.formData.nombre.toLowerCase())))        
           if(($scope.formData.delivery==true && distances[i].delivery==true) || $scope.formData.delivery==undefined)
             if(( $scope.formData.tipohelado=='artesanal' && distances[i].artesanal==true) || ($scope.formData.tipohelado=='artesanal' && distances[i].artesanal==false) || $scope.formData.tipohelado==undefined)
               if(($scope.formData.precio == undefined) || (distances[i].precio <= $scope.formData.precio))              
@@ -225,7 +226,7 @@ indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', functio
     }
     else{
       for(var i=0; i<num; i++){
-      if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && todas[i].nombre.toLowerCase().includes(0,$scope.formData.nombre.toLowerCase())))        
+      if(($scope.formData.nombre == undefined) || ($scope.formData.nombre != undefined && todas[i].nombre.toLowerCase().includes($scope.formData.nombre.toLowerCase())))        
         if(($scope.formData.delivery==true && todas.delivery==true) || $scope.formData.delivery==undefined)
           if(( $scope.formData.tipohelado=='artesanal' && todas[i].artesanal==true) || ($scope.formData.tipohelado=='artesanal' && todas[i].artesanal==false) || $scope.formData.tipohelado==undefined)
             if(($scope.formData.precio == undefined) || (todas[i].precio <= $scope.formData.precio))              

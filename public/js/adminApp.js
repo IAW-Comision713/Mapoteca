@@ -245,7 +245,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
                     centrarMapa(e);
                     
                     $scope.formData.direccion = results[0].formatted_address;
-                    $scope.$apply();
+                    //$scope.$apply();
 
                   } else {
                     Materialize.toast("No fue posible cargar la dirección :(", 4000);
@@ -322,7 +322,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
                         actualizarHeladerias();
 
-                        $scope.$apply();
+                        //$scope.$apply();
 
                     }
                 };
@@ -383,7 +383,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
         //console.log(id);
         //console.log($scope.urlfacebook);
 
-        $scope.$apply();
+        //$scope.$apply();
 
         FB.XFBML.parse();
     }
