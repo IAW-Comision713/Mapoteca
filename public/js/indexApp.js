@@ -29,10 +29,6 @@ indexApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
       .when('/listado', {
         templateUrl: 'partials/listado.html',
       })
-      .when('/login', {
-        templateUrl: 'partials/login.html',
-        controller: 'loginCtrl'
-      })
       .when('/readme', {
         templateUrl: 'partials/readme.html'
       })

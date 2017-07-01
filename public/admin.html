@@ -35,7 +35,13 @@
       </div>
     </nav>  
 
-    <div id="panellogueado" ng-show="getAutenticado()" >
+    <div id="panellogin" ng-hide="autenticado">
+      <div class="row">
+      <ng-include src="'partials/login.html'"></ng-include>
+      </div>
+    </div>
+
+    <div id="panellogueado" ng-show="autenticado" >
 
       <div class="row">
         <div class="mapng col s8">
@@ -54,7 +60,6 @@
 
         </div>
 
-        <!--  -->
 
 
 

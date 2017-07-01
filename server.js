@@ -130,6 +130,10 @@ apiRoutes.post('/query', function(req, res) {
     res.json(heladerias);
   });
 });
+
+apiRoutes.get('/admin', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/admin.html'));
+});
 // ---------------------------------------------------------
 // route middleware to authenticate and check token
 // ---------------------------------------------------------
@@ -160,11 +164,8 @@ adminRoutes.use(function(req, res, next) {
 // ---------------------------------------------------------
 // authenticated routes
 // ---------------------------------------------------------
-adminRoutes.get('/admin', function(req, res) {
-  res.sendFile(path.join(__dirname + '/public/admin.html'));
-});
 adminRoutes.get('/', function(req, res) {
-  res.json({ message: 'Welcome to the coolest API on earth!' });
+  res.json({ success: true });
 });
 adminRoutes.get('/users', function(req, res) {
   User.find({}, function(err, users) {
@@ -218,7 +219,7 @@ adminRoutes.delete('/heladerias/:id', function(req, res) {
 //Guardar una nueva heladería
 adminRoutes.post('/heladerias', function(req, res) {
   
-  var newheladeria = new Heladeria(req.body);
+  var newheladeria = new Heladeria(req.body.heladeria);
   
   newheladeria.save(function(err) {
     if (err)

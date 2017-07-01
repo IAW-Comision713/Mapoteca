@@ -3,7 +3,7 @@
 var adminApp = angular.module('adminApp', ['ngRoute', 'ngMap']);
 
 var token;
-var autenticado = true;
+var autenticado;
 
 var direccion = "";
 var location = [];
@@ -40,8 +40,7 @@ var location = [];
 }]);*/
 
 adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', function($http, $scope, NgMap, $location) {
-// Initializes Variables
-    // ----------------------------------------------------------------------------
+
     $scope.formData = {};
 
     $scope.location = {};
@@ -53,13 +52,47 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios";
 
     vaciarFormulario();
-    // Functions
-    // ----------------------------------------------------------------------------
-    $scope.logout = function(){
-        localStorage.setItem("token","");
-        window.location="/";
-    };
 
+    function chequearLogin() {
+
+        $http.get('/auth', {"headers": {"x-access-token": localStorage.getItem("token")}}).then(function(response) {
+                $scope.autenticado = response.data.success;          
+        }, function errorCallback(response) {
+                $scope.autenticado = false;
+        });
+    }
+
+    chequearLogin();
+
+    $scope.login = function() {
+
+        var userData = {
+            usuario: $scope.formData.usuario,
+            password: $scope.formData.password,
+        };
+        
+        $http.post("/authenticate", userData).then(function successCallback(response) {
+
+            $scope.autenticado = response.data.success;
+            localStorage.setItem("token", response.data.token);
+            console.log($scope.autenticado);
+            console.log(localStorage.getItem("token"));
+
+            $scope.formData = {};
+                        
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.log('Error: ' + response.data);
+        });
+    }
+
+    $scope.logout = function(){
+        
+        autenticado = false;
+        localStorage.setItem("token", "");
+
+    };
 
     // Creates a new heladeria based on the form fields
     $scope.createHeladeria = function() {
@@ -77,7 +110,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
         };
 
         // Saves data to the db
-        $http.post('/auth/heladerias?token='+localStorage.getItem("token"), heladeriaData)
+        $http.post('/auth/heladerias', {'token': localStorage.getItem("token"), 'heladeria': heladeriaData})
             .success(function (data) {
                 
                 Materialize.toast("Heladería agregada correctamente!!", 4000);
@@ -90,14 +123,6 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
                 Materialize.toast("No fue posible agregar la heladería :(", 4000);
             });
-        
-
-        /*$http.get('/heladerias').success(function(data){
-            console.log("Success:"+data);
-        })
-        .error(function(data){
-            console.log("Error:"+data);
-        })*/
     };
 
     $scope.id = 0;
@@ -115,7 +140,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
             gustos: $scope.formData.gustos ? $scope.formData.gustos.split(",") : []//separa los string en un arreglo de strings
         };
 
-        $http.put('/auth/heladerias/'+$scope.detalles._id, {token: localStorage.getItem("token"), heladeria: heladeriaData})
+        $http.put('/auth/heladerias/'+$scope.detalles._id, {'token': localStorage.getItem("token"), 'heladeria': heladeriaData})
         .success(function (data) {
 
             vaciarFormulario();
@@ -256,10 +281,8 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     }
 
     $scope.getAutenticado = function() {
-        if(localStorage.getItem("token")!= "")
-            return true;
-        else
-            return false;
+        
+        return $scope.autenticado;
     }
 
     //crear marcadores para las heladerias guardadas
