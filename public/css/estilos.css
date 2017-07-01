@@ -31,3 +31,8 @@ body {
 #rangoprecio[style^="height: 440px"] {
   height: 3px !important;
 }
+
+.custom-marker {
+
+	z-index: MAX_ZINDEX;
+}

@@ -13,8 +13,7 @@
     <link type="text/css" rel="stylesheet" href="css/estilos.css"/> 
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="js/materialize.js"></script>
-    <script src="js/facebook.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
     
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC8ko8zyOY8TozwC8_br5zoNY5ayQOD7o&libraries=places"></script>     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
@@ -43,9 +42,10 @@
 
           <ng-map zoom="13" center="-38.70, -62.27" id="map" on-click="moverPin()">
 
-            <marker ng-repeat="heladeria in heladerias" position="{{ heladeria.location[0] }}, {{ heladeria.location[1] }}" icon="img/pinhelado.png" on-click="cargarInfoHeladeria(heladeria._id)"></marker>
+            <marker ng-repeat="hg in heladeriasGoogle" position="{{ hg.geometry.location.lat() }}, {{ hg.geometry.location.lng() }}" on-click="cargarInfoGoogle({{$index}})" class="custom-marker">
+            </marker>
 
-            <marker ng-repeat="hg in heladeriasGoogle" position="{{ hg.geometry.location.lat() }}, {{ hg.geometry.location.lng() }}" on-click="cargarInfoGoogle({{$index}})"></marker>
+            <marker ng-repeat="heladeria in heladerias" position="{{ heladeria.location[0] }}, {{ heladeria.location[1] }}" icon="img/pinhelado.png" on-click="cargarInfoHeladeria(heladeria._id)"></marker>
 
             <marker position="{{pin.lat}}, {{pin.lng}}"></marker>
                   
@@ -61,16 +61,21 @@
         <div class="col s4">
           <div class="nav-content">
             <ul class="tabs">
-              <li class="tab"><a href="/admin">Editar</a></li>
-              <li class="tab"><a href="/admin/listado">Listado</a></li>
-              <li class="tab"><a href="/admin/detalles">Detalles</a></li>
-              <li class="tab"><a href="/admin/comentarios">Comentarios</a></li>
+              <li class="tab"><a href="#editar">Editar</a></li>
+              <li class="tab"><a href="#listado">Listado</a></li>
+              <li class="tab"><a href="#detalles">Detalles</a></li>
+              <li class="tab"><a href="#comentarios">Comentarios</a></li>
               
             </ul>
           </div>
 
           <div class="row paneles">
-            <div class="panelscrollable" ng-view></div>
+            <div class="panelscrollable">
+              <div id="editar"><ng-include src="'partials/panelabm.html'"></ng-include></div>
+              <div id="listado"><ng-include src="'partials/listado.html'"></ng-include></div>
+              <div id="detalles"><ng-include src="'partials/detalles.html'"></ng-include></div>
+              <div id="comentarios"><ng-include src="'partials/comentarios.html'"></ng-include></div>
+            </div>
           </div>
         </div> 
       </div> 

@@ -8,7 +8,7 @@ var autenticado = true;
 var direccion = "";
 var location = [];
 
-adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+/*adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     
     $locationProvider.html5Mode(true);
 
@@ -37,7 +37,7 @@ adminApp.config( ['$routeProvider', '$locationProvider', function($routeProvider
       .otherwise({
         redirectTo: '/admin'
       });
-}]);
+}]);*/
 
 adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', function($http, $scope, NgMap, $location) {
 // Initializes Variables
@@ -50,7 +50,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
     $scope.pin = {};
 
-    $scope.urlfacebook = $location.absUrl();
+    $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios";
 
     vaciarFormulario();
     // Functions
@@ -69,7 +69,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
             nombre: $scope.formData.nombre,
             direccion: $scope.formData.direccion,
             location: [$scope.location.lat, $scope.location.lng],
-            telefono: $scope.formData.telefono ? $scope.formData.telefono : false,
+            telefono: $scope.formData.telefono ? $scope.formData.telefono : "",
             artesanal: $scope.formData.artesanal ? $scope.formData.artesanal : false,
             delivery: $scope.formData.delivery ? $scope.formData.delivery : false,
             precio: $scope.formData.precio,
@@ -103,7 +103,6 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     $scope.id = 0;
 
     $scope.updateHeladeria = function() {
-        console.log($scope.formData.gustos);
 
         var heladeriaData = {
             nombre: $scope.formData.nombre,
@@ -134,14 +133,17 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
     }
 
     $scope.removeHeladeria = function() {
-        var data={
-            id:$scope.detalles._id
+        
+        var data = {
+
+            "headers": {"x-access-token": localStorage.getItem("token")}
         };
 
-        $http.delete('/auth/heladerias/'+$scope.detalles._id+'?token='+localStorage.getItem("token"),data)
+        $http.delete('/auth/heladerias/'+$scope.detalles._id, data)
         .success(function (data) {
 
-            
+            vaciarFormulario();
+            actualizarHeladerias();
 
             Materialize.toast("Heladería eliminada correctamente!!", 4000);
 
@@ -151,9 +153,6 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
             Materialize.toast("No fue posible eliminar la heladería :(", 4000);
         });
-
-        vaciarFormulario();
-        actualizarHeladerias();
     }
 
     function vaciarFormulario() {
@@ -171,6 +170,8 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
     $scope.selectHeladeria = function(_id) {
 
+        actualizarComentarios(_id);
+
         $http.get('/heladerias/'+_id).then(function(response) {
 
             console.log(response.data);
@@ -182,7 +183,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
             $scope.formData.nombre = $scope.detalles.nombre;
             $scope.formData.direccion = $scope.detalles.direccion;
-            $scope.formData.telefono = $scope.detalles.telefono;
+            $scope.formData.telefono = $scope.detalles.telefono ? $scope.detalles.telefono : "",
             $scope.formData.artesanal = $scope.detalles.artesanal;
             $scope.formData.delivery = $scope.detalles.delivery;
             $scope.formData.precio = $scope.detalles.precio;
@@ -191,9 +192,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
             $scope.location.lng = $scope.detalles.location[1];
 
             $scope.agregar = false;           
-        });
-
-        actualizarComentarios(_id); 
+        }); 
     }
 
     var geocoder = new google.maps.Geocoder;
@@ -235,6 +234,8 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
     $scope.obtenerCoordenadas = function() {
 
+        actualizarComentarios();
+
         geocoder.geocode({address: $scope.formData.direccion}, function(results, status) {
             
             if (status == 'OK') {
@@ -270,8 +271,7 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
         });
     }
 
-    //actualizarHeladerias();
-
+    //Variable que siempre tiene el mapa
     var vm = this;
 
     //crear marcadores para las heladerias de google
@@ -351,10 +351,17 @@ adminApp.controller('adminCtrl', ['$http', '$scope', 'NgMap', '$location', funct
 
     function actualizarComentarios(id) {
 
+
         if(id)
             $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios/" + id;
         else
-            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port();
+            $scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port() + "/comentarios";
+        
+        console.log(id);
+        console.log($scope.urlfacebook);
+
+        $scope.$apply();
+
         FB.XFBML.parse();
     }
 

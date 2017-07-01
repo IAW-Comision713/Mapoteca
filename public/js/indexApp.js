@@ -76,7 +76,7 @@ indexApp.controller('loginCtrl', ['$scope', '$http', '$location',function($scope
 indexApp.controller('mapCtrl', ['$http', '$scope', '$location', 'NgMap', function($http, $scope, $location, NgMap, geolocation) {
 
 		$scope.heladerias;
-		$scope.urlfacebook
+		$scope.urlfacebook = $location.protocol()+ "://"+ $location.host() + ":"+ $location.port();
 		$scope.detalles = {};
 		$scope.agregar = false;
 		var actual;
